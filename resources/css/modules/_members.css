@@ -1,0 +1,113 @@
+/* ============================================================
+   Member Cards & Profile Header
+   ============================================================ */
+
+.member-card {
+    background: rgba(255, 255, 255, 0.015);
+    border: 1px solid var(--border-glow);
+    border-radius: var(--radius-lg);
+    padding: 16px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    min-width: 0;
+    transition: border-color var(--t-base), transform var(--t-base), box-shadow var(--t-base);
+}
+.member-card:hover {
+    border-color: var(--accent-purple);
+    transform: translateY(-2px);
+    box-shadow: 0 12px 30px rgba(88, 28, 135, 0.35);
+}
+
+.member-avatar-link { flex-shrink: 0; }
+.member-avatar {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    object-fit: cover;
+    flex-shrink: 0;
+    box-shadow: 0 4px 14px rgba(168, 85, 247, 0.35);
+}
+.member-info { flex: 1; min-width: 0; }
+.member-info .name {
+    font-family: var(--font-body);
+    font-weight: 700;
+    color: #fff;
+    font-size: 15px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.member-info .name a:hover { color: var(--accent-purple-bright); }
+.member-info .stats {
+    color: #b9aed0;
+    font-size: 11px;
+    margin-top: 2px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.member-info .btn-follow { margin-top: 8px; }
+.member-card .follow-count { display: none; }
+.follow-count { opacity: 0.6; font-size: 11px; }
+
+/* Profile header */
+.profile-header {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+}
+.profile-avatar {
+    width: 110px;
+    height: 110px;
+    border-radius: 50%;
+    border: 3px solid var(--accent-purple);
+    object-fit: cover;
+    flex-shrink: 0;
+    box-shadow: 0 10px 30px rgba(168, 85, 247, 0.35);
+}
+.profile-info { min-width: 0; }
+.profile-info h1 {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 34px;
+    color: #fff;
+    margin-bottom: 2px;
+}
+.profile-bio {
+    font-family: var(--font-display);
+    font-style: italic;
+    color: var(--text-secondary);
+    margin: 4px 0 12px;
+    font-size: 15px;
+}
+.profile-stats {
+    display: flex;
+    gap: 22px;
+    flex-wrap: wrap;
+}
+.profile-stats span {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: var(--text-muted);
+}
+.profile-stats b {
+    font-family: var(--font-display);
+    font-size: 22px;
+    letter-spacing: 0;
+    color: #fff;
+    line-height: 1.1;
+}
+
+/* Favourite films (profile) */
+.favorites {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 14px;
+    max-width: 620px;
+}

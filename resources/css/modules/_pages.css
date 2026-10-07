@@ -1,0 +1,411 @@
+/* ============================================================
+   Page layouts — Films header, Journal timeline, Teasers, Members
+   ============================================================ */
+
+/* Title row: big title left, action right */
+.page-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    flex-wrap: wrap;
+    margin-bottom: 36px;
+}
+.page-head.bordered {
+    padding-bottom: 24px;
+    margin-bottom: 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+/* Centred serif title with an uppercase eyebrow — Teasers */
+.page-hero-title {
+    text-align: center;
+    margin-bottom: 36px;
+}
+.eyebrow {
+    margin-top: 6px;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: var(--accent-purple-bright);
+}
+
+.page-lede {
+    color: var(--text-secondary);
+    font-size: 14px;
+    margin-bottom: 28px;
+}
+
+/* ---------- Lists ---------- */
+.new-list-form { max-width: 560px; }
+.new-list-form select { height: auto; min-height: 42px; }
+
+/* ---------- Journal ---------- */
+.journal { max-width: 1040px; }
+
+.journal-month {
+    position: relative;
+    padding-left: 26px;
+    margin-bottom: 48px;
+}
+/* Timeline rail + dot */
+.journal-month::before {
+    content: "";
+    position: absolute;
+    left: 2px;
+    top: 14px;
+    bottom: 0;
+    width: 2px;
+    background: rgba(168, 85, 247, 0.28);
+}
+.journal-month-title {
+    position: relative;
+    font-family: var(--font-display);
+    font-weight: 400;
+    font-size: 24px;
+    color: #fff;
+    margin-bottom: 18px;
+}
+.journal-month-title::before {
+    content: "";
+    position: absolute;
+    left: -30px;
+    top: 50%;
+    width: 12px;
+    height: 12px;
+    margin-top: -8px;
+    border-radius: 50%;
+    background: var(--accent-purple);
+    box-shadow: 0 0 0 4px rgba(168, 85, 247, 0.18), 0 0 14px rgba(168, 85, 247, 0.7);
+}
+
+.journal-row {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 24px;
+    padding: 12px;
+    margin-bottom: 14px;
+    border: 1px solid var(--border-glow);
+    border-radius: var(--radius-lg);
+    background: rgba(255, 255, 255, 0.012);
+}
+.journal-entry {
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+    min-width: 0;
+    padding: 2px;
+    border-radius: var(--radius-md);
+    transition: background var(--t-fast);
+}
+.journal-entry:hover { background: rgba(168, 85, 247, 0.06); }
+.journal-thumb {
+    width: 46px;
+    height: 62px;
+    flex-shrink: 0;
+    border-radius: var(--radius-sm);
+    background: var(--grad-poster) center / cover;
+}
+.journal-body {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    padding-top: 6px;
+}
+.journal-head {
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-bottom: 4px;
+}
+.journal-head b {
+    font-size: 13px;
+    font-weight: 700;
+    color: #fff;
+}
+.journal-date {
+    font-size: 11px;
+    color: #a99bc6;
+}
+.journal-head .stars { font-size: 12px; }
+.journal-text {
+    font-size: 12px;
+    color: #c4b2e6;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+.journal-author {
+    margin-top: 4px;
+    font-size: 11px;
+    color: var(--text-muted);
+}
+
+/* ---------- Teasers ---------- */
+.teasers { max-width: 940px; }
+
+.teaser-hero {
+    position: relative;
+    min-height: 300px;
+    border: 1px solid var(--border-glow);
+    border-radius: var(--radius-xl);
+    overflow: hidden;
+    background:
+        linear-gradient(180deg, rgba(25, 10, 40, 0.55) 0%, rgba(20, 8, 32, 0.92) 78%),
+        var(--teaser-bg, none) center 30% / cover,
+        linear-gradient(135deg, #2a1240, #150a22);
+    box-shadow: 0 30px 60px rgba(0, 0, 0, 0.45);
+}
+.teaser-hero .teaser-player {
+    border: none;
+    border-radius: 0;
+    box-shadow: none;
+}
+.teaser-hero-cover {
+    min-height: 300px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    align-items: stretch;
+    padding: 32px;
+    position: relative;
+}
+.teaser-play {
+    position: absolute;
+    left: 50%;
+    top: 76px;
+    transform: translateX(-50%);
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    border: none;
+    background: var(--accent-purple);
+    color: #fff;
+    display: grid;
+    place-items: center;
+    cursor: pointer;
+    box-shadow: 0 0 0 8px rgba(168, 85, 247, 0.15), var(--shadow-purple);
+    transition: transform var(--t-base), box-shadow var(--t-base);
+}
+.teaser-play svg { width: 26px; height: 26px; margin-left: 3px; }
+.teaser-play:hover {
+    transform: translateX(-50%) scale(1.08);
+    box-shadow: 0 0 0 12px rgba(168, 85, 247, 0.2), 0 10px 40px rgba(168, 85, 247, 0.6);
+}
+.teaser-soon {
+    position: absolute;
+    left: 50%;
+    top: 92px;
+    transform: translateX(-50%);
+    padding: 6px 14px;
+    border-radius: var(--radius-pill);
+    background: rgba(0, 0, 0, 0.45);
+    border: 1px solid var(--border-glow);
+    color: var(--text-secondary);
+    font-size: 12px;
+    font-weight: 600;
+    white-space: nowrap;
+}
+.teaser-hero-info { max-width: 640px; margin-top: 150px; }
+.teaser-hero-heading {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    flex-wrap: wrap;
+    margin-bottom: 12px;
+}
+.teaser-hero-heading h2 {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 34px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: #fff;
+    text-shadow: 0 2px 18px rgba(0, 0, 0, 0.6);
+}
+.teaser-hero-heading h2 a:hover { color: var(--accent-purple-bright); }
+.date-pill {
+    padding: 4px 10px;
+    border-radius: var(--radius-sm);
+    border: 1px solid rgba(192, 132, 252, 0.6);
+    background: rgba(168, 85, 247, 0.22);
+    color: #f3e8ff;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.3px;
+    white-space: nowrap;
+}
+.teaser-hero-info p {
+    font-size: 13px;
+    line-height: 1.6;
+    color: #c4b2e6;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+.teaser-more {
+    display: inline-block;
+    margin-top: 10px;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--accent-purple-bright);
+}
+.teaser-more:hover { color: #fff; }
+
+.teaser-cards {
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 14px;
+    margin-top: 32px;
+}
+.teaser-card {
+    display: flex;
+    flex-direction: column;
+    padding: 12px;
+    border: 1px solid var(--border-glow);
+    border-radius: var(--radius-lg);
+    background: rgba(255, 255, 255, 0.015);
+    min-width: 0;
+    transition: transform var(--t-base), border-color var(--t-base), box-shadow var(--t-base);
+}
+.teaser-card:hover {
+    transform: translateY(-3px);
+    border-color: var(--accent-purple);
+    box-shadow: 0 14px 34px rgba(88, 28, 135, 0.45);
+}
+.teaser-card-poster {
+    aspect-ratio: 3 / 4;
+    border-radius: var(--radius-md);
+    background: var(--grad-poster) center / cover;
+}
+.teaser-card-title {
+    margin-top: 14px;
+    font-size: 12px;
+    font-weight: 800;
+    text-transform: uppercase;
+    color: #fff;
+    letter-spacing: -0.01em;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.teaser-card-foot {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 6px;
+    margin-top: 10px;
+    font-size: 10px;
+    font-weight: 600;
+    color: #c4b2e6;
+}
+.mini-play {
+    width: 18px;
+    height: 18px;
+    flex-shrink: 0;
+    border-radius: 50%;
+    background: var(--accent-purple);
+    color: #fff;
+    display: grid;
+    place-items: center;
+}
+.mini-play svg { width: 9px; height: 9px; margin-left: 1px; }
+
+/* ---------- Members ---------- */
+.members { max-width: 1140px; }
+.members-head { justify-content: flex-start; gap: 26px; margin-bottom: 40px; }
+
+.pill-search {
+    position: relative;
+    display: flex;
+    align-items: center;
+    width: 290px;
+    max-width: 100%;
+}
+.pill-search svg {
+    position: absolute;
+    left: 14px;
+    width: 15px;
+    height: 15px;
+    color: var(--accent-purple-bright);
+    pointer-events: none;
+}
+.pill-search input {
+    width: 100%;
+    height: 36px;
+    padding: 0 16px 0 38px;
+    border-radius: var(--radius-pill);
+    border: 1px solid var(--border-glow);
+    background: rgba(255, 255, 255, 0.02);
+    color: #fff;
+    font-size: 13px;
+    outline: none;
+    transition: border-color var(--t-fast), box-shadow var(--t-fast);
+}
+.pill-search input::placeholder { color: #a99bc6; }
+.pill-search input:focus {
+    border-color: var(--accent-purple);
+    box-shadow: 0 0 0 3px rgba(168, 85, 247, 0.15);
+}
+
+.member-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 16px;
+}
+
+[x-cloak] { display: none !important; }
+
+@media (max-width: 1024px) {
+    .poster-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+    .member-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    .teaser-cards { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+}
+
+@media (max-width: 768px) {
+    .page-title { font-size: 42px; }
+    .poster-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 20px 14px; }
+    .member-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .teaser-cards { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    .journal-row { grid-template-columns: 1fr; }
+    .teaser-hero-heading h2 { font-size: 24px; }
+    .teaser-hero-cover { padding: 22px; }
+}
+
+@media (max-width: 480px) {
+    .poster-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .member-grid { grid-template-columns: 1fr; }
+    .teaser-cards { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+/* Empty-state messages inside grids span the full row */
+.card-grid > .empty-state,
+.member-grid > .empty-state,
+.poster-grid > .empty-state,
+.poster-row > .empty-state,
+.review-grid > .empty-state { grid-column: 1 / -1; }
+
+input[type="file"]::file-selector-button {
+    margin-right: 12px;
+    padding: 6px 14px;
+    border: 1px solid var(--border-glow);
+    border-radius: var(--radius-pill);
+    background: rgba(168, 85, 247, 0.12);
+    color: #ede4ff;
+    font-family: var(--font-body);
+    font-weight: 600;
+    font-size: 12px;
+    cursor: pointer;
+}
+input[type="file"]::file-selector-button:hover { background: var(--accent-purple); color: #fff; }
+
+/* Long unbroken words in user text wrap instead of widening the page */
+.journal-text,
+.review-text,
+.comment-text,
+.activity-snippet,
+.profile-bio { overflow-wrap: anywhere; }

@@ -1,0 +1,35 @@
+/* ============================================================
+   Stat Boxes (profile, diary, dashboards)
+   ============================================================ */
+
+.stats-row {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 16px;
+    margin-bottom: 32px;
+}
+
+.stat-box {
+    background: var(--bg-surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 20px;
+    text-align: center;
+    transition: border-color var(--t-base);
+}
+.stat-box:hover { border-color: var(--accent-purple); }
+
+.stat-box b {
+    display: block;
+    color: #fff;
+    font-size: 28px;
+    font-family: 'Playfair Display', serif;
+    margin-bottom: 4px;
+}
+.stat-box span {
+    color: var(--text-muted);
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-weight: 600;
+}

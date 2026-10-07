@@ -1,0 +1,113 @@
+/* ============================================================
+   Typography
+   ============================================================ */
+
+h1, h2, h3, h4, h5, h6, .section-title {
+    font-family: var(--font-display);
+    color: var(--text-primary);
+    letter-spacing: -0.01em;
+    line-height: 1.15;
+}
+
+h1 { font-size: 36px; }
+h2 { font-size: 26px; }
+h3 { font-size: 20px; }
+
+.section-title {
+    font-size: 30px;
+    margin-bottom: 24px;
+}
+.section-title.small { font-size: 22px; }
+
+.section-subtitle {
+    font-size: 14px;
+    color: var(--text-muted);
+    margin-top: -14px;
+    margin-bottom: 26px;
+}
+
+/* Big serif page titles — "Journal", "Members", "Teasers" */
+.page-title {
+    font-family: var(--font-display);
+    font-weight: 400;
+    font-size: 56px;
+    line-height: 1.05;
+    color: #fff;
+    letter-spacing: -0.01em;
+}
+
+/* Bold sans page titles — "Films" */
+.page-title-sans {
+    font-family: var(--font-body);
+    font-weight: 800;
+    font-size: 30px;
+    color: #fff;
+    letter-spacing: -0.02em;
+}
+
+/* Serif section headings — "Most Active Reviewers" */
+.section-heading {
+    font-family: var(--font-display);
+    font-weight: 400;
+    font-size: 24px;
+    color: #fff;
+    margin: 48px 0 18px;
+}
+.section-heading:first-child { margin-top: 0; }
+.section-heading small {
+    font-family: var(--font-body);
+    font-size: 12px;
+    color: var(--text-muted);
+    margin-left: 8px;
+}
+
+/* Courier section label with a thin rule — "JUST REVIEWED..." */
+.section-label {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 12px;
+    font-family: var(--font-mono);
+    font-weight: 700;
+    font-size: 13px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: #fff;
+    padding-bottom: 10px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.16);
+    margin: 48px 0 16px;
+}
+.section-label a {
+    font-size: 11px;
+    color: var(--text-muted);
+    letter-spacing: 1px;
+}
+.section-label a:hover { color: var(--accent-purple-bright); }
+
+.section-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    flex-wrap: wrap;
+    margin-bottom: 24px;
+}
+.section-header .section-title { margin-bottom: 0; }
+.section-header .link {
+    color: var(--accent-purple-bright);
+    font-size: 13px;
+    font-weight: 600;
+    transition: color var(--t-fast);
+}
+.section-header .link:hover { color: #fff; }
+
+.slab { font-family: var(--font-slab); font-weight: 700; letter-spacing: 0; }
+.mono { font-family: var(--font-mono); }
+
+.text-muted  { color: var(--text-muted); }
+.text-white  { color: #fff; }
+.text-purple { color: var(--accent-purple-bright); }
+.text-red    { color: var(--accent-red-bright); }
+
+.link { color: var(--accent-purple-bright); }
+.link:hover { color: #fff; }

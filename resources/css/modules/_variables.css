@@ -1,0 +1,85 @@
+/* ============================================================
+   Design Tokens — FilmFolio dark cinema theme
+   Near-black with a violet glow, rounded glassy cards, pill buttons.
+   ============================================================ */
+
+:root {
+    /* Base surfaces */
+    --bg-base:      #0e0a14;   /* page background (purple-black) */
+    --bg-deep:      #0b0810;   /* navbar, footer */
+    --bg-surface:   #150f1f;   /* cards, panels */
+    --bg-elevated:  #1c1528;   /* inputs, hover states */
+    --border:       #2a1f3d;
+    --border-glow:  rgba(168, 85, 247, 0.32);   /* purple outline on cards */
+
+    /* Brand purples */
+    --accent-purple:        #a855f7;
+    --accent-purple-bright: #c084fc;
+    --accent-purple-deep:   #6d28d9;
+    --accent-violet:        #8b5cf6;   /* auth submit buttons */
+    --poster-fill:          #140b22;   /* empty poster placeholder */
+    --poster-border:        #251838;
+    --caption-bg:           #3a1d5c;   /* caption plate under posters (home) */
+
+    /* Call to action + status */
+    --accent-sky:        #0ea5e9;   /* "Get Started" */
+    --accent-sky-dark:   #0284c7;
+    --accent-teal:       #1f9fa6;
+    --accent-teal-dark:  #17808a;
+    --accent-red:        #e11d48;
+    --accent-red-bright: #f43f5e;
+    --accent-green:      #22c55e;
+
+    /* Text */
+    --text-primary:   #ffffff;
+    --text-title:     #ede4ff;   /* lavender-white card titles */
+    --text-secondary: #c9bfdc;
+    --text-muted:     #8a7fa3;
+
+    /* Aliases used by inline styles in older views */
+    --text-dim:    var(--text-muted);
+    --purple-glow: var(--accent-purple-bright);
+    --pink:        #f472b6;
+    --bg-2:        var(--bg-elevated);
+
+    /* Typography */
+    --font-body:    'Inter', -apple-system, "Segoe UI", Roboto, sans-serif;
+    --font-display: 'Playfair Display', Georgia, serif;
+    --font-slab:    'Playfair Display', Georgia, serif;
+    --font-mono:    'Courier Prime', 'Courier New', monospace;
+
+    /* Gradients */
+    --grad-brand:  linear-gradient(135deg, #d946ef 0%, #8b5cf6 100%);
+    --grad-purple: linear-gradient(135deg, #a855f7 0%, #9333ea 100%);
+    --grad-poster: linear-gradient(180deg, #9333ea 0%, #5b21b6 100%);
+    --grad-red:    linear-gradient(135deg, #e11d48 0%, #f43f5e 100%);
+    --grad-nav:    var(--bg-deep);
+    --grad-page:   radial-gradient(ellipse 70% 520px at 50% 0%, rgba(88, 28, 135, 0.28), transparent 75%);
+
+    /* Radius */
+    --radius-sm:  6px;
+    --radius-md:  10px;
+    --radius-lg:  14px;
+    --radius-xl:  20px;
+    --radius-pill: 999px;
+
+    /* Shadow */
+    --shadow-purple: 0 8px 28px rgba(168, 85, 247, 0.35);
+    --shadow-red:    0 12px 40px rgba(225, 29, 72, 0.3);
+    --shadow-deep:   0 30px 80px rgba(0, 0, 0, 0.6);
+
+    /* Spacing */
+    --container-max: 1310px;
+    --container-pad: 40px;
+    --gap-sm: 12px;
+    --gap-md: 20px;
+    --gap-lg: 40px;
+
+    /* Cinema background (auth). Stored locally so it works offline. */
+    --cinema-image: url('/images/cinema.jpg');
+
+    /* Transitions */
+    --t-fast: 0.15s ease;
+    --t-base: 0.2s ease;
+    --t-slow: 0.3s ease;
+}

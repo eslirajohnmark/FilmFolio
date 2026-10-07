@@ -1,0 +1,162 @@
+/* ============================================================
+   Posters — rounded tiles (title + year below) and
+   Courier caption plates (home page)
+   ============================================================ */
+
+.poster-grid {
+    display: grid;
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+    gap: 28px 22px;
+}
+.poster-row {
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 16px;
+}
+
+.poster-card { display: block; position: relative; min-width: 0; }
+
+.poster-card .poster,
+.poster {
+    aspect-ratio: 2 / 3;
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--poster-border);
+    background-color: var(--poster-fill);
+    background-size: cover;
+    background-position: center;
+    display: grid;
+    place-items: center;
+    color: rgba(255, 255, 255, 0.25);
+    font-size: 34px;
+    position: relative;
+    overflow: hidden;
+    transition: border-color var(--t-base), box-shadow var(--t-base), transform var(--t-base);
+}
+.poster-card:hover .poster {
+    border-color: var(--border-glow);
+    box-shadow: 0 14px 34px rgba(88, 28, 135, 0.45);
+    transform: translateY(-3px);
+}
+
+/* Empty poster: purple play disc + "POSTER", or a film-strip icon */
+.poster-placeholder {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    color: rgba(168, 85, 247, 0.55);
+}
+.poster-placeholder > svg { width: 38px; height: 38px; }
+.placeholder-play {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: rgba(168, 85, 247, 0.16);
+    color: var(--accent-purple);
+    display: grid;
+    place-items: center;
+}
+.placeholder-play svg { width: 16px; height: 16px; }
+.placeholder-label {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: #8f84a8;
+}
+
+/* Tile: title + year centred under the poster */
+.poster-card .title {
+    margin-top: 12px;
+    font-size: 13px;
+    font-weight: 600;
+    line-height: 1.35;
+    color: var(--text-title);
+    text-align: center;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.poster-card .year,
+.poster-card .meta-row {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 6px;
+    margin-top: 3px;
+    font-size: 12px;
+    color: var(--text-muted);
+}
+.poster-card:hover .title { color: #fff; }
+
+/* Plate: poster sits on a purple Courier caption plate */
+.poster-card.plate .poster {
+    border-radius: var(--radius-sm) var(--radius-sm) 0 0;
+    border: 1px solid #3b2160;
+    border-bottom: none;
+    background-color: #1f0c33;
+}
+.poster-card.plate:hover .poster { transform: none; box-shadow: none; }
+.poster-card.plate { transition: transform var(--t-base), box-shadow var(--t-base); border-radius: var(--radius-sm); }
+.poster-card.plate:hover { transform: translateY(-3px); box-shadow: 0 14px 34px rgba(88, 28, 135, 0.45); }
+.poster-card .caption {
+    background: var(--caption-bg);
+    border: 1px solid #3b2160;
+    border-top: none;
+    border-radius: 0 0 var(--radius-sm) var(--radius-sm);
+    padding: 12px 8px 14px;
+    text-align: center;
+    font-family: var(--font-mono);
+    font-weight: 700;
+    font-size: 12px;
+    line-height: 1.35;
+    color: #fff;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+.poster-card .caption span {
+    display: block;
+    font-weight: 400;
+    font-size: 10px;
+    color: #d8cdea;
+    margin-top: 2px;
+}
+
+/* Rating / owner badge on poster hover */
+.poster-card .poster-meta {
+    position: absolute;
+    left: 0; right: 0; bottom: 0;
+    padding: 18px 8px 6px;
+    background: linear-gradient(180deg, transparent, rgba(0, 0, 0, 0.85));
+    font-size: 11px;
+    color: #fff;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    opacity: 0;
+    transition: opacity var(--t-fast);
+}
+.poster-card:hover .poster-meta,
+.poster-card .poster-meta.always { opacity: 1; }
+.poster-meta img {
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+.poster-meta .stars { font-size: 10px; letter-spacing: 1px; }
+
+/* Small list-preview poster stack */
+.poster-stack {
+    display: flex;
+    margin-bottom: 14px;
+}
+.poster-stack .poster {
+    width: 64px;
+    flex-shrink: 0;
+    font-size: 16px;
+    border-radius: var(--radius-sm);
+    box-shadow: 4px 0 12px rgba(0, 0, 0, 0.6);
+}
+.poster-stack .poster + .poster { margin-left: -22px; }

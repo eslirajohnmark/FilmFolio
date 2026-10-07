@@ -1,0 +1,106 @@
+/* ============================================================
+   Hero Sections
+   ============================================================ */
+
+.hero {
+    position: relative;
+    overflow: hidden;
+}
+
+/* Purple-tinted cinema seats (kept for pages that still want it) */
+.hero-cinema {
+    background-image:
+        linear-gradient(180deg, rgba(14, 10, 20, 0.35) 0%, rgba(14, 10, 20, 0.8) 70%, var(--bg-base) 100%),
+        linear-gradient(135deg, rgba(91, 33, 182, 0.55) 0%, rgba(46, 13, 79, 0.55) 100%),
+        var(--cinema-image);
+    background-size: cover;
+    background-position: center 35%;
+}
+
+.hero-inner {
+    position: relative;
+    max-width: var(--container-max);
+    margin: 0 auto;
+    padding: 60px var(--container-pad);
+}
+
+/* Guest landing hero */
+.landing-hero {
+    min-height: 500px;
+    display: grid;
+    place-items: center;
+    text-align: center;
+}
+.landing-hero h1 {
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-size: 52px;
+    line-height: 1.02;
+    letter-spacing: -0.01em;
+    color: #fff;
+}
+.landing-cta { margin-top: 56px; }
+.landing-hero .tagline {
+    margin-top: 40px;
+    font-family: var(--font-body);
+    font-size: 14px;
+    color: #e6e1ef;
+}
+.home-sections { padding-top: 40px; }
+.home-sections > .section-label:first-child { margin-top: 0; }
+
+.hero-title {
+    font-size: 44px;
+    font-style: italic;
+    color: #fff;
+}
+
+/* Film detail page: backdrop banner + poster/details grid */
+.film-backdrop {
+    height: 380px;
+    background-size: cover;
+    background-position: center 25%;
+    mask-image: linear-gradient(180deg, #000 55%, transparent 100%);
+    -webkit-mask-image: linear-gradient(180deg, #000 55%, transparent 100%);
+}
+.film-backdrop.empty {
+    height: 120px;
+    background: linear-gradient(135deg, rgba(91, 33, 182, 0.45), rgba(46, 13, 79, 0.2));
+}
+
+.film-hero {
+    display: grid;
+    grid-template-columns: 230px 1fr 260px;
+    gap: 36px;
+    align-items: start;
+}
+
+@media (max-width: 960px) {
+    .film-hero { grid-template-columns: 200px 1fr; }
+    .film-hero > .film-sidebar { grid-column: 1 / -1; }
+}
+
+@media (max-width: 640px) {
+    .film-hero { grid-template-columns: 1fr; }
+    .film-hero > .film-poster-col { max-width: 200px; }
+}
+
+/* Signed-in home greeting */
+.welcome {
+    text-align: center;
+    padding-top: 72px;
+    padding-bottom: 40px;
+}
+.welcome h1 {
+    font-family: var(--font-display);
+    font-weight: 400;
+    font-size: 36px;
+    color: #fff;
+}
+.welcome h1 a { font-family: var(--font-display); font-weight: 700; color: #fff; }
+.welcome h1 a:hover { color: var(--accent-purple-bright); }
+.welcome p {
+    margin-top: 8px;
+    font-family: var(--font-display);
+    color: var(--text-secondary);
+}

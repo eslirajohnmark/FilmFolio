@@ -1,0 +1,43 @@
+/* ============================================================
+   Reset & Base
+   ============================================================ */
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { scroll-behavior: smooth; }
+
+body {
+    background: var(--grad-page) no-repeat, var(--bg-base);
+    color: var(--text-secondary);
+    font-family: var(--font-body);
+    font-size: 14px;
+    line-height: 1.55;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    -webkit-font-smoothing: antialiased;
+}
+
+main { flex: 1; }
+
+img { max-width: 100%; display: block; }
+button { font-family: inherit; }
+input, textarea, select { font-family: inherit; }
+a { color: inherit; text-decoration: none; }
+ul, ol { list-style: none; }
+code {
+    font-family: var(--font-mono);
+    background: var(--bg-elevated);
+    padding: 1px 6px;
+    border-radius: var(--radius-sm);
+}
+
+:focus-visible {
+    outline: 2px solid var(--accent-purple-bright);
+    outline-offset: 2px;
+}
+
+::selection {
+    background: var(--accent-purple);
+    color: #fff;
+}

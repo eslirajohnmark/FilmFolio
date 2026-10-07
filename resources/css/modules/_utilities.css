@@ -1,0 +1,104 @@
+/* ============================================================
+   Utilities — badges, chips, helpers
+   ============================================================ */
+
+.badge {
+    background: rgba(168, 85, 247, 0.15);
+    border: 1px solid var(--accent-purple);
+    color: var(--accent-purple-bright);
+    padding: 3px 10px;
+    border-radius: var(--radius-pill);
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+.badge.red {
+    background: rgba(225, 29, 72, 0.15);
+    border-color: var(--accent-red);
+    color: var(--accent-red-bright);
+}
+
+/* Tabs */
+.tabs {
+    display: flex;
+    gap: 30px;
+    margin-top: 36px;
+    border-bottom: 1px solid var(--border);
+}
+.tabs a {
+    padding: 12px 0;
+    color: var(--text-muted);
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-weight: 600;
+    border-bottom: 3px solid transparent;
+    margin-bottom: -1px;
+    cursor: pointer;
+    transition: color var(--t-fast);
+}
+.tabs a:hover { color: var(--text-secondary); }
+.tabs a.active {
+    color: #fff;
+    border-bottom-color: var(--accent-purple);
+}
+
+/* Text helpers */
+.text-center { text-align: center; }
+.text-right  { text-align: right; }
+.mt-sm { margin-top: var(--gap-sm); }
+.mt-md { margin-top: var(--gap-md); }
+.mt-lg { margin-top: var(--gap-lg); }
+.mb-sm { margin-bottom: var(--gap-sm); }
+.mb-md { margin-bottom: var(--gap-md); }
+.mb-lg { margin-bottom: var(--gap-lg); }
+
+/* No !important: Tailwind's responsive variants (e.g. pagination's `hidden sm:flex`) must be able to override it. */
+.hidden { display: none; }
+.sr-only {
+    position: absolute;
+    width: 1px; height: 1px;
+    padding: 0; margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    border: 0;
+}
+
+/* Footer */
+.site-footer {
+    background: var(--bg-deep);
+    border-top: 1px solid rgba(168, 85, 247, 0.12);
+    margin-top: 80px;
+    padding: 30px var(--container-pad);
+    text-align: center;
+    font-family: var(--font-mono);
+    color: #c9c2d6;
+    font-size: 12px;
+}
+.footer-credit { color: var(--text-muted); margin-left: 6px; }
+
+.tabs { flex-wrap: wrap; row-gap: 0; }
+
+.empty-state {
+    color: var(--text-muted);
+    padding: 24px 0;
+}
+.empty-state a { color: var(--accent-purple-bright); }
+
+/* Laravel / Livewire Tailwind pagination, recoloured for the dark theme */
+nav[role="navigation"] { margin-top: 24px; }
+nav[role="navigation"] .bg-white,
+nav[role="navigation"] span[aria-current] > span {
+    background: var(--bg-surface) !important;
+    border-color: var(--border) !important;
+    color: var(--text-secondary) !important;
+}
+nav[role="navigation"] span[aria-current] > span {
+    background: var(--accent-purple) !important;
+    color: #fff !important;
+}
+nav[role="navigation"] a:hover { color: #fff !important; background: var(--bg-elevated) !important; }
+nav[role="navigation"] p,
+nav[role="navigation"] .text-gray-700 { color: var(--text-muted) !important; }
+nav[role="navigation"] .shadow-sm { box-shadow: none; }

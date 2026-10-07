@@ -1,0 +1,92 @@
+/* ============================================================
+   Responsive — must be imported LAST
+   ============================================================ */
+
+@media (max-width: 1240px) {
+    .navbar { padding: 0 32px; }
+    .nav-links { gap: 22px; }
+}
+
+@media (max-width: 1024px) {
+    :root { --container-pad: 28px; }
+    .poster-row { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+    .poster-row > :nth-child(n+5) { display: none; }
+}
+
+@media (max-width: 960px) {
+    .navbar { flex-wrap: wrap; gap: 12px; padding: 14px 20px; }
+    .nav-toggle { display: inline-block; }
+    .nav-links,
+    .nav-right { display: none; width: 100%; }
+    .navbar.open .nav-links {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 14px;
+        padding: 8px 0;
+    }
+    .navbar.open .nav-right {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 14px;
+        padding-bottom: 12px;
+    }
+    .nav-search { flex: 1 1 100%; }
+    .nav-search input,
+    .nav-search.open input {
+        width: 100%;
+        opacity: 1;
+        padding: 9px 14px 9px 36px;
+        background: rgba(255, 255, 255, 0.04);
+        border-color: var(--border-glow);
+    }
+    .nav-search .nav-search-toggle { position: absolute; left: 8px; z-index: 1; }
+    .nav-search .nav-search-toggle svg { width: 15px; height: 15px; }
+}
+
+@media (max-width: 768px) {
+    :root { --container-pad: 20px; }
+
+    .hero-inner { padding: 40px var(--container-pad); }
+    .landing-hero h1 { font-size: 32px; }
+
+    .container,
+    .container-narrow { padding: 32px var(--container-pad); }
+
+    .profile-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 14px;
+    }
+    .profile-avatar { width: 84px; height: 84px; }
+    .profile-info h1 { font-size: 24px; }
+    .btn-edit-profile { margin-left: 0; }
+
+    .poster-row { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    .poster-row > :nth-child(n+4) { display: none; }
+
+    .diary-page-row { grid-template-columns: 50px 60px 1fr; gap: 12px; }
+    .diary-form .form-grid { grid-template-columns: 1fr; }
+
+    .film-title { font-size: 28px; }
+    .film-backdrop { height: 240px; }
+    .film-page { margin-top: -120px; }
+
+    .admin-table { font-size: 12px; }
+    .admin-table th:nth-child(3),
+    .admin-table td:nth-child(3) { display: none; }
+
+    .auth-card { padding: 30px 22px; }
+    .page-head .btn-primary { padding: 8px 16px; }
+}
+
+@media (max-width: 480px) {
+    .favorites { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .stats-row { grid-template-columns: repeat(2, 1fr); }
+    .card-grid { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 640px) {
+    .review-page { grid-template-columns: 1fr !important; }
+    .review-page > .poster-card { max-width: 140px; }
+}

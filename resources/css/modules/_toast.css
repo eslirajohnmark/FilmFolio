@@ -1,0 +1,39 @@
+/* ============================================================
+   Toast Notifications
+   ============================================================ */
+
+.toast {
+    position: fixed;
+    bottom: 24px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--bg-elevated);
+    border-left: 4px solid var(--accent-purple);
+    color: #fff;
+    padding: 14px 22px;
+    border-radius: var(--radius-md);
+    z-index: 9999;
+    font-size: 14px;
+    font-weight: 500;
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5);
+    animation: slideUp 0.25s ease-out;
+}
+
+.toast.success { border-left-color: var(--accent-purple); }
+.toast.error   { border-left-color: var(--accent-red); }
+
+@keyframes slideUp {
+    from { transform: translateX(-50%) translateY(20px); opacity: 0; }
+    to   { transform: translateX(-50%) translateY(0);    opacity: 1; }
+}
+
+/* Livewire loading bar */
+.loading-bar {
+    background: rgba(139, 92, 246, 0.15);
+    color: var(--accent-purple-bright);
+    padding: 6px 12px;
+    border-radius: 6px;
+    margin: 8px 0;
+    font-size: 12px;
+    display: inline-block;
+}

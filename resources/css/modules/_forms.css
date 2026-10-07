@@ -1,0 +1,195 @@
+/* ============================================================
+   Forms — inputs, textareas, selects, search bars
+   ============================================================ */
+
+.input,
+.search-bar input,
+.search-bar select,
+.form-row input,
+.form-row textarea,
+.form-row select,
+.diary-form input[type="text"],
+.diary-form input[type="date"],
+.diary-form textarea,
+.panel-form input[type="text"],
+.panel-form input[type="email"],
+.panel-form input[type="password"],
+.panel-form input[type="file"],
+.panel-form textarea {
+    width: 100%;
+    background: var(--bg-elevated);
+    border: 1px solid var(--border);
+    color: #fff;
+    padding: 10px 14px;
+    border-radius: var(--radius-md);
+    font-size: 14px;
+    outline: none;
+    transition: border-color var(--t-fast), box-shadow var(--t-fast);
+}
+.search-bar input::placeholder,
+.diary-form textarea::placeholder,
+.panel-form textarea::placeholder,
+.input::placeholder { color: var(--text-muted); }
+
+.input:focus,
+.search-bar input:focus,
+.search-bar select:focus,
+.form-row input:focus,
+.form-row textarea:focus,
+.diary-form input:focus,
+.diary-form textarea:focus,
+.panel-form input:focus,
+.panel-form textarea:focus {
+    border-color: var(--accent-purple);
+    box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.15);
+}
+
+.search-bar {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 26px;
+    flex-wrap: wrap;
+}
+.search-bar input { flex: 1; min-width: 200px; width: auto; }
+.search-bar select { width: auto; cursor: pointer; }
+
+.form-row { display: flex; flex-direction: column; gap: 16px; }
+.form-row label { color: var(--text-muted); font-size: 13px; font-weight: 600; }
+.form-row .error { color: var(--accent-red-bright); font-size: 12px; margin-top: 4px; }
+
+/* Films filter bar: search field + custom dropdowns */
+.filter-bar {
+    display: flex;
+    gap: 14px;
+    margin: 32px 0 40px;
+    flex-wrap: wrap;
+}
+.filter-search {
+    flex: 1;
+    min-width: 220px;
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+.filter-search svg {
+    position: absolute;
+    left: 15px;
+    width: 16px;
+    height: 16px;
+    color: #b9aed0;
+    pointer-events: none;
+}
+.filter-search input,
+.filter-bar select,
+.select {
+    height: 42px;
+    background: #120c1c;
+    border: 1px solid #2a1f3a;
+    border-radius: var(--radius-md);
+    color: #e8e0f5;
+    font-size: 14px;
+    outline: none;
+    transition: border-color var(--t-fast), box-shadow var(--t-fast);
+}
+.filter-search input {
+    width: 100%;
+    padding: 0 14px 0 40px;
+}
+.filter-search input::placeholder { color: #8f84a8; }
+.filter-bar select,
+.select,
+.search-bar select {
+    appearance: none;
+    -webkit-appearance: none;
+    cursor: pointer;
+    padding: 0 40px 0 14px;
+    min-width: 142px;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 6'%3E%3Cpath d='M0 0h10L5 6z' fill='%23e8e0f5'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 16px center;
+    background-size: 10px 6px;
+}
+.filter-search input:focus,
+.filter-bar select:focus,
+.select:focus {
+    border-color: var(--accent-purple);
+    box-shadow: 0 0 0 3px rgba(168, 85, 247, 0.15);
+}
+select option { background: var(--bg-surface); color: #fff; }
+
+.is-loading { opacity: 0.5; transition: opacity var(--t-base); }
+
+/* Panels: diary logger, review form, settings sections */
+.diary-form,
+.panel {
+    background: var(--bg-surface);
+    border: 1px solid var(--border-glow);
+    border-radius: var(--radius-lg);
+    padding: 20px;
+    margin-top: 14px;
+}
+.diary-form .form-grid {
+    display: grid;
+    grid-template-columns: 1fr auto auto;
+    gap: 16px;
+    align-items: end;
+}
+.diary-form label,
+.panel-form label {
+    color: var(--text-secondary);
+    font-size: 12px;
+    font-weight: 600;
+}
+.diary-form label.checkbox,
+.panel-form label.checkbox {
+    display: inline-flex;
+    gap: 6px;
+    align-items: center;
+    cursor: pointer;
+}
+.diary-form textarea,
+.panel-form textarea { min-height: 120px; resize: vertical; }
+input[type="checkbox"] { accent-color: var(--accent-purple); }
+
+.panel h2,
+.panel-title {
+    font-family: var(--font-display);
+    font-size: 20px;
+    color: #fff;
+    margin-bottom: 4px;
+}
+.panel-sub {
+    color: var(--text-muted);
+    font-size: 13px;
+    margin-bottom: 18px;
+}
+.panel-form .field { margin-bottom: 14px; }
+.panel-form .field > label { display: block; margin-bottom: 6px; }
+.panel-form .field-error { color: var(--accent-red-bright); font-size: 12px; margin-top: 4px; }
+.panel-form .actions { display: flex; align-items: center; gap: 12px; }
+.panel-form .saved { color: var(--accent-green); font-size: 13px; }
+.panel.danger { border-color: rgba(225, 29, 72, 0.45); }
+
+/* Tag chips */
+.tag-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: rgba(139, 92, 246, 0.15);
+    border: 1px solid var(--accent-purple-deep);
+    color: var(--accent-purple-bright);
+    padding: 3px 10px;
+    border-radius: var(--radius-pill);
+    font-size: 12px;
+    font-weight: 500;
+}
+a.tag-chip:hover { background: var(--accent-purple); color: #fff; }
+.tag-x {
+    background: transparent;
+    border: none;
+    color: var(--accent-red-bright);
+    cursor: pointer;
+    font-size: 14px;
+    line-height: 1;
+    padding: 0;
+}

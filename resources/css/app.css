@@ -1,0 +1,32 @@
+/* ============================================================
+   FilmFolio — Vite CSS Entry Point
+   Do not link this file directly in Blade.
+   Use @vite('resources/css/app.css') instead.
+   ============================================================ */
+
+@import './modules/_variables.css';
+@import './modules/_reset.css';
+@import './modules/_typography.css';
+@import './modules/_layout.css';
+@import './modules/_navbar.css';
+@import './modules/_hero.css';
+@import './modules/_buttons.css';
+@import './modules/_forms.css';
+@import './modules/_auth.css';
+@import './modules/_posters.css';
+@import './modules/_cards.css';
+@import './modules/_reviews.css';
+@import './modules/_film.css';
+@import './modules/_activity.css';
+@import './modules/_members.css';
+@import './modules/_admin.css';
+@import './modules/_stats.css';
+@import './modules/_toast.css';
+@import './modules/_utilities.css';
+@import './modules/_pages.css';
+@import './modules/_responsive.css'; /* must be last of the modules */
+
+/* Tailwind: only used by the Breeze auth/settings views and pagination links.
+   Preflight (base) is disabled in tailwind.config.js so it can't reset the modules above. */
+@tailwind components;
+@tailwind utilities;
