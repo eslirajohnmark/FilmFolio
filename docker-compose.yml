@@ -80,9 +80,9 @@ services:
       - dbdata:/var/lib/mysql
       # *.sql files here are loaded once, when the database volume is first created
       - ./docker/mysql/init:/docker-entrypoint-initdb.d:ro
-    # 3307 on your machine, so it doesn't clash with Laragon's MySQL on 3306
+    # 3308 on your machine, so it doesn't clash with Laragon (3307) or a MySQL service on 3306
     ports:
-      - "${DOCKER_DB_PORT:-3307}:3306"
+      - "${DOCKER_DB_PORT:-3308}:3306"
     healthcheck:
       test: ["CMD-SHELL", "mysqladmin ping -h 127.0.0.1 -u root -p$$MYSQL_ROOT_PASSWORD --silent"]
       interval: 5s

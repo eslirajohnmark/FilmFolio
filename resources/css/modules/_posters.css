@@ -89,38 +89,58 @@
 }
 .poster-card:hover .title { color: #fff; }
 
-/* Plate: poster sits on a purple Courier caption plate */
+/* Plate (home page): a purple card holding the poster, a Courier
+   "(YEAR) Title" line and a row of rating stars */
+.poster-card.plate {
+    background: var(--caption-bg);
+    border: 1px solid #6b4fa3;
+    border-radius: var(--radius-sm);
+    padding: 6px 6px 8px;
+    transition: transform var(--t-base), box-shadow var(--t-base), border-color var(--t-base);
+}
+.poster-card.plate:hover {
+    transform: translateY(-3px);
+    border-color: var(--accent-purple-bright);
+    box-shadow: 0 14px 34px rgba(88, 28, 135, 0.45);
+}
 .poster-card.plate .poster {
-    border-radius: var(--radius-sm) var(--radius-sm) 0 0;
-    border: 1px solid #3b2160;
-    border-bottom: none;
+    aspect-ratio: 15 / 16;
+    border: none;
+    border-radius: 6px;
     background-color: #1f0c33;
+    background-position: center top;
 }
 .poster-card.plate:hover .poster { transform: none; box-shadow: none; }
-.poster-card.plate { transition: transform var(--t-base), box-shadow var(--t-base); border-radius: var(--radius-sm); }
-.poster-card.plate:hover { transform: translateY(-3px); box-shadow: 0 14px 34px rgba(88, 28, 135, 0.45); }
+
 .poster-card .caption {
-    background: var(--caption-bg);
-    border: 1px solid #3b2160;
-    border-top: none;
-    border-radius: 0 0 var(--radius-sm) var(--radius-sm);
-    padding: 12px 8px 14px;
+    margin-top: 8px;
+    padding: 0 2px;
     text-align: center;
     font-family: var(--font-mono);
     font-weight: 700;
     font-size: 12px;
-    line-height: 1.35;
+    line-height: 1.3;
     color: #fff;
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
 }
-.poster-card .caption span {
-    display: block;
-    font-weight: 400;
-    font-size: 10px;
-    color: #d8cdea;
-    margin-top: 2px;
+
+.plate-stars {
+    margin-top: 5px;
+    display: flex;
+    justify-content: center;
+    gap: 3px;
+    font-size: 17px;
+    line-height: 1;
+    color: rgba(255, 255, 255, 0.22);
+}
+.plate-stars .on { color: var(--accent-violet); }
+.plate-stars .half {
+    background: linear-gradient(90deg, var(--accent-violet) 50%, rgba(255, 255, 255, 0.22) 50%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
 }
 
 /* Rating / owner badge on poster hover */

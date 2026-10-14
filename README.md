@@ -87,7 +87,7 @@ Open http://localhost:8080. Four containers start:
 - **app** — the website (PHP 8.3 + Apache), production mode. On start it migrates the database, creates or updates the admin from `ADMIN_*`, and imports films from TMDB if there are none.
 - **queue** — sends the queued emails (welcome, new follower, review comment).
 - **scheduler** — runs the daily film sync.
-- **mysql** — MySQL 8.4, reachable from your machine on port 3307 (so it doesn't clash with Laragon on 3306).
+- **mysql** — MySQL 8.4, reachable from your machine on port 3308 (so it doesn't clash with Laragon on 3307).
 
 Your `.env` is mounted read-only; Docker overrides the database host, `APP_URL`, `APP_ENV=production` and `APP_DEBUG=false`. Change the port or passwords with `DOCKER_APP_PORT`, `DOCKER_DB_PASSWORD` and `DOCKER_DB_ROOT_PASSWORD` in your shell or a `.env`-style file passed with `--env-file`.
 
