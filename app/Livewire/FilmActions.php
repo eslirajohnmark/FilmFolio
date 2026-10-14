@@ -122,7 +122,7 @@ class FilmActions extends Component
         if ($review && ! $review->body) {
             $review->delete();
         } elseif ($review) {
-            $this->dispatch('notify', message: 'Your review keeps its rating — edit the review to change it.');
+            $this->dispatch('notify', message: 'Your review keeps its rating — edit the review to change it.', type: 'error');
         }
 
         $this->refreshState();
@@ -138,7 +138,7 @@ class FilmActions extends Component
         if ($this->isFavorite) {
             $user->favoriteFilms()->detach($this->film->id);
         } elseif ($user->favoriteFilms()->count() >= self::MAX_FAVORITES) {
-            $this->dispatch('notify', message: 'You already have '.self::MAX_FAVORITES.' favourites. Remove one from your profile first.');
+            $this->dispatch('notify', message: 'You already have '.self::MAX_FAVORITES.' favourites. Remove one from your profile first.', type: 'error');
 
             return;
         } else {

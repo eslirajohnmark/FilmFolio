@@ -65,7 +65,7 @@ class SearchController extends Controller
         } catch (Throwable $e) {
             Log::warning("TMDB import of #{$tmdbId} failed: {$e->getMessage()}");
 
-            return back()->with('status', 'Could not load that film from TMDB right now. Please try again.');
+            return back()->with('error', 'Could not load that film from TMDB right now. Please try again.');
         }
 
         return redirect()->route('films.show', $film);

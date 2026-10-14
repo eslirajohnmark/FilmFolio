@@ -7,16 +7,7 @@
 <body>
     @include('partials.navbar')
 
-    @if(session('status'))
-        @php
-            $statusMessages = [
-                'password-updated' => 'Password updated.',
-                'verification-link-sent' => 'Verification link sent.',
-                'profile-updated' => 'Profile updated.',
-            ];
-        @endphp
-        <div class="toast">{{ $statusMessages[session('status')] ?? session('status') }}</div>
-    @endif
+    @include('partials.toasts')
 
     <main>
         @yield('content')

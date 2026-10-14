@@ -1,11 +1,25 @@
 <script>
-    // Toasts dispatched from Livewire components: $this->dispatch('notify', message: '...')
+    // Toasts (partials.toasts): gone after 4 seconds, or straight away when clicked
+    const dismissToast = (toast) => {
+        toast.classList.add('leaving');
+        setTimeout(() => toast.remove(), 200);
+    };
+    const startToastTimer = (toast) => setTimeout(() => dismissToast(toast), 4000);
+    document.querySelectorAll('#toasts .toast').forEach(startToastTimer);
+    document.addEventListener('click', (e) => {
+        const toast = e.target.closest('.toast');
+        if (toast) dismissToast(toast);
+    });
+
+    // From Livewire components: $this->dispatch('notify', message: '...', type: 'error')
     window.addEventListener('notify', (e) => {
+        const { message = '', type = 'success' } = e.detail[0] ?? e.detail;
         const toast = document.createElement('div');
-        toast.className = 'toast';
-        toast.textContent = e.detail.message ?? (e.detail[0]?.message ?? '');
-        document.body.appendChild(toast);
-        setTimeout(() => toast.remove(), 2500);
+        toast.className = `toast ${type}`;
+        toast.setAttribute('role', type === 'error' ? 'alert' : 'status');
+        toast.textContent = message;
+        document.getElementById('toasts').appendChild(toast);
+        startToastTimer(toast);
     });
 
     // Hidden admin entrance: Ctrl+Shift+L
@@ -25,6 +39,29 @@
         input.dataset.wasPassword = '1';
         input.type = hidden ? 'text' : 'password';
         toggle.textContent = hidden ? 'Hide' : 'Show';
+    });
+
+    // Forms marked data-require-filled: gray, unclickable submit until every required field has a value.
+    // Lists marked data-password-rules: hidden until a password is typed, then each rule turns green once met.
+    const syncAuthForms = () => {
+        document.querySelectorAll('form[data-require-filled]:not([data-submitted])').forEach((form) => {
+            const filled = [...form.querySelectorAll('[required]')].every((input) => input.value.trim() !== '');
+            form.querySelector('[type="submit"]').disabled = ! filled;
+        });
+        document.querySelectorAll('[data-password-rules]').forEach((list) => {
+            const password = document.getElementById(list.dataset.passwordRules).value;
+            list.querySelectorAll('[data-rule]').forEach((rule) => {
+                rule.classList.toggle('met', new RegExp(rule.dataset.rule, 'u').test(password));
+            });
+            list.hidden = password === '';
+        });
+    };
+    syncAuthForms();
+    document.addEventListener('input', syncAuthForms);
+
+    // A server error under a field is out of date once the user edits that field
+    document.addEventListener('input', (e) => {
+        e.target.closest('.field')?.querySelector('.field-error')?.remove();
     });
 
     // Close the account menu when clicking elsewhere
@@ -75,6 +112,8 @@
                 if (button.dataset.idleText) button.textContent = button.dataset.idleText;
             }
         });
+
+        syncAuthForms();
     });
 
     // Navbar search: the magnifier opens the field; clicking it again with text searches

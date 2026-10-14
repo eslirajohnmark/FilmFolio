@@ -31,9 +31,7 @@
         </div>
     </nav>
 
-    @if(session('status'))
-        <div class="toast">{{ session('status') }}</div>
-    @endif
+    @include('partials.toasts')
 
     <main class="container admin-main">
         @yield('content')

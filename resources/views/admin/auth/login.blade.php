@@ -1,7 +1,4 @@
 <x-guest-layout heading="Admin Sign In" subheading="Administrator access only" :admin="true">
-    @if (session('status'))
-        <div class="notice">{{ session('status') }}</div>
-    @endif
 
     <form method="POST" action="{{ route('admin.login.submit') }}" data-submit-once data-clear-on-back autocomplete="off">
         @csrf

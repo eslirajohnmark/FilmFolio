@@ -151,7 +151,7 @@ class FilmController extends Controller
         } catch (Throwable $e) {
             Log::warning("Admin TMDB import failed: {$e->getMessage()}");
 
-            return back()->with('status', 'Could not import that film from TMDB.');
+            return back()->with('error', 'Could not import that film from TMDB.');
         }
 
         if ($request->boolean('is_teaser')) {

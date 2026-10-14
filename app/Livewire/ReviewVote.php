@@ -50,7 +50,7 @@ class ReviewVote extends Component
         }
 
         if ($this->review->user_id === auth()->id()) {
-            $this->dispatch('notify', message: "You can't vote on your own review.");
+            $this->dispatch('notify', message: "You can't vote on your own review.", type: 'error');
 
             return;
         }

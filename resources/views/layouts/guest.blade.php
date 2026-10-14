@@ -21,6 +21,7 @@
         </div>
     </main>
 
+    @include('partials.toasts')
     @include('partials.scripts')
 </body>
 </html>

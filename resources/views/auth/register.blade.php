@@ -1,5 +1,5 @@
 <x-guest-layout heading="Create Account" subheading="Join the FilmFolio community">
-    <form method="POST" action="{{ route('register') }}" data-submit-once data-clear-on-back autocomplete="off">
+    <form method="POST" action="{{ route('register') }}" data-submit-once data-require-filled data-clear-on-back autocomplete="off">
         @csrf
 
         <x-auth-input name="name" label="Full Name" icon="user"
@@ -13,6 +13,14 @@
 
         <x-auth-input name="password" label="Password" type="password" icon="lock"
                       placeholder="Enter your password" required autocomplete="new-password" />
+
+        <ul class="password-rules" data-password-rules="password" aria-live="polite" hidden>
+            <li data-rule=".{8}">At least 8 characters</li>
+            <li data-rule="\p{Lu}">One uppercase letter</li>
+            <li data-rule="\p{Ll}">One lowercase letter</li>
+            <li data-rule="\p{N}">One number</li>
+            <li data-rule="[\p{Z}\p{S}\p{P}]">One special character (e.g. ! @ # ?)</li>
+        </ul>
 
         <x-auth-input name="password_confirmation" label="Confirm Password" type="password" icon="lock"
                       placeholder="Confirm your password" required autocomplete="new-password" />
