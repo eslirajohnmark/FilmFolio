@@ -12,7 +12,7 @@
         <h1>{{ $user->name }}</h1>
         <div class="review-author" style="font-size:13px;">&#64;{{ $user->username }} · {{ $user->email }}</div>
         <p class="profile-bio">Joined {{ $user->created_at->format('M d, Y') }}</p>
-        <span class="status status-{{ $state === 'active' ? 'active' : ($state === 'admin' ? 'admin' : ($state === 'banned' ? 'banned' : 'suspended')) }}">{{ ucfirst($state) }}</span>
+        <span class="status status-{{ $state === 'active' ? 'active' : ($state === 'banned' ? 'banned' : 'suspended') }}">{{ ucfirst($state) }}</span>
         @if($user->is_featured) <span class="badge">Featured member</span> @endif
     </div>
     <div class="profile-stats" style="margin-left:auto;">
@@ -56,9 +56,6 @@
         <section class="panel" style="margin-top:0;">
             <h2>Moderation</h2>
 
-            @if($user->isAdmin())
-                <p class="panel-sub">Admin accounts can't be suspended, banned or deleted.</p>
-            @else
                 @if($state === 'suspended' || $state === 'banned')
                     <div class="notice" style="margin-bottom:14px;">
                         {{ $user->accessBlockedMessage() }}
@@ -98,7 +95,6 @@
                         <button class="btn btn-danger btn-block">Ban permanently</button>
                     </form>
                 @endunless
-            @endif
 
             <form method="POST" action="{{ route('admin.accounts.feature', $user) }}" style="margin-bottom:18px;">
                 @csrf
@@ -106,14 +102,34 @@
                 <button class="btn btn-secondary btn-block">{{ $user->is_featured ? 'Remove from Featured Members' : 'Feature this member' }}</button>
             </form>
 
-            @unless($user->isAdmin())
+            <h2 style="margin-top:8px;">Sessions</h2>
+            @if($sessions->isEmpty())
+                <p class="panel-sub">Not signed in on any device.</p>
+            @else
+                <ul class="session-list" style="margin-bottom:12px;">
+                    @foreach($sessions as $session)
+                        <li class="session-row" style="padding:8px 10px;">
+                            <span class="session-info">
+                                <b style="font-size:13px;">{{ $session->platform }} · {{ $session->browser }}</b>
+                                <span>{{ $session->ip ?? 'Unknown IP' }} · {{ $session->lastActive->diffForHumans() }}</span>
+                            </span>
+                        </li>
+                    @endforeach
+                </ul>
+            @endif
+            <form method="POST" action="{{ route('admin.accounts.sessions.destroy', $user) }}" style="margin-bottom:18px;"
+                  onsubmit="return confirm(@js('Sign @'.$user->username.' out of every device?'))">
+                @csrf
+                @method('DELETE')
+                <button class="btn btn-secondary btn-block">Sign out everywhere</button>
+            </form>
+
                 <form method="POST" action="{{ route('admin.accounts.destroy', $user) }}"
                       onsubmit="return confirm(@js('Delete @'.$user->username.' and all of their reviews, lists and activity? This cannot be undone.'))">
                     @csrf
                     @method('DELETE')
                     <button class="btn btn-ghost btn-block" style="color:var(--accent-red-bright);">Delete account…</button>
                 </form>
-            @endunless
         </section>
     </aside>
 </div>

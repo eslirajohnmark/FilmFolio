@@ -1,5 +1,5 @@
 <x-guest-layout heading="Reset Password" subheading="Choose a new password for your account">
-    <form method="POST" action="{{ route('password.store') }}" data-submit-once>
+    <form method="POST" action="{{ route('password.store') }}" data-submit-once data-clear-on-back autocomplete="off">
         @csrf
         <input type="hidden" name="token" value="{{ $request->route('token') }}">
 

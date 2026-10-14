@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Models\Admin;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\UploadedFile;
@@ -25,7 +26,7 @@ class AccountSecurityTest extends TestCase
         $this->assertGuest();
     }
 
-    public function test_registration_can_not_assign_the_admin_role(): void
+    public function test_registration_can_never_create_an_admin(): void
     {
         $this->post('/register', [
             'name' => 'Sneaky',
@@ -36,7 +37,8 @@ class AccountSecurityTest extends TestCase
             'role' => 'admin',
         ]);
 
-        $this->assertFalse(User::where('email', 'sneaky@example.com')->firstOrFail()->isAdmin());
+        $this->assertModelExists(User::where('email', 'sneaky@example.com')->firstOrFail());
+        $this->assertSame(0, Admin::count());
     }
 
     public function test_avatar_file_is_removed_when_the_account_is_deleted(): void

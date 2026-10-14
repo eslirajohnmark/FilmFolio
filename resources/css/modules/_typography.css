@@ -26,7 +26,7 @@ h3 { font-size: 20px; }
     margin-bottom: 26px;
 }
 
-/* Big serif page titles — "Journal", "Members", "Teasers" */
+/* Big serif page titles — "Lists", "Members", "Teasers" */
 .page-title {
     font-family: var(--font-display);
     font-weight: 400;

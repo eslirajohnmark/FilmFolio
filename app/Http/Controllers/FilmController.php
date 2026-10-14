@@ -5,21 +5,25 @@ namespace App\Http\Controllers;
 use App\Models\Activity;
 use App\Models\Film;
 use App\Models\Review;
+use App\Services\Recommendations;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
 
 class FilmController extends Controller
 {
-    public function index(): View
+    public function index(Recommendations $recommendations): View
     {
         return view('films.index', [
             'popular' => Film::popularThisWeek()->take(5)->get(),
+            'suggestions' => $recommendations->suggestionsFor(),
         ]);
     }
 
-    public function show(Film $film): View
+    public function show(Film $film, Recommendations $recommendations): View
     {
+        $recommendations->recordView($film);
+
         $film->load('tags')
             ->loadCount(['watchers', 'likers', 'lists', 'reviews'])
             ->loadAvg('reviews', 'rating');

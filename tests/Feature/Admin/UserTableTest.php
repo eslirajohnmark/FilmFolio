@@ -3,6 +3,7 @@
 namespace Tests\Feature\Admin;
 
 use App\Livewire\Admin\UserTable;
+use App\Models\Admin;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Livewire\Livewire;
@@ -14,12 +15,13 @@ class UserTableTest extends TestCase
 
     public function test_admins_can_filter_members_by_status(): void
     {
-        $admin = User::factory()->create(['role' => 'admin', 'username' => 'boss']);
+        $admin = Admin::factory()->create(['username' => 'boss']);
         User::factory()->create(['username' => 'goodgail']);
         User::factory()->create(['username' => 'suspendedsam', 'suspended_at' => now(), 'suspended_until' => now()->addDay()]);
         User::factory()->create(['username' => 'bannedbob', 'banned_at' => now()]);
 
-        $table = Livewire::actingAs($admin)->test(UserTable::class);
+        $this->actingAsAdmin($admin);
+        $table = Livewire::test(UserTable::class);
 
         $table->set('status', 'suspended')->assertSee('suspendedsam')->assertDontSee('goodgail')->assertDontSee('bannedbob');
         $table->set('status', 'banned')->assertSee('bannedbob')->assertDontSee('suspendedsam')->assertDontSee('goodgail');
@@ -28,10 +30,12 @@ class UserTableTest extends TestCase
 
     public function test_an_expired_suspension_counts_as_active(): void
     {
-        $admin = User::factory()->create(['role' => 'admin']);
+        $admin = Admin::factory()->create();
         User::factory()->create(['username' => 'servedtime', 'suspended_at' => now()->subWeek(), 'suspended_until' => now()->subDay()]);
 
-        Livewire::actingAs($admin)->test(UserTable::class)
+        $this->actingAsAdmin($admin);
+
+        Livewire::test(UserTable::class)
             ->set('status', 'active')
             ->assertSee('servedtime');
     }

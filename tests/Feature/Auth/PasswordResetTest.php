@@ -4,7 +4,6 @@ namespace Tests\Feature\Auth;
 
 use App\Models\User;
 use Illuminate\Auth\Notifications\ResetPassword;
-use Illuminate\Foundation\Http\Middleware\PreventRequestForgery;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Facades\Password;
@@ -98,42 +97,6 @@ class PasswordResetTest extends TestCase
         Notification::assertNothingSent();
     }
 
-    public function test_local_requests_for_a_real_account_are_sent_to_the_mailpit_inbox(): void
-    {
-        Notification::fake();
-        $this->runInEnvironmentWithMailpit('local');
-
-        $user = User::factory()->create();
-
-        $this->post('/forgot-password', ['email' => $user->email])
-            ->assertRedirect('http://localhost:8025');
-
-        Notification::assertSentTo($user, ResetPassword::class);
-    }
-
-    public function test_local_requests_for_an_unknown_account_stay_on_the_form(): void
-    {
-        $this->runInEnvironmentWithMailpit('local');
-
-        $this->from('/forgot-password')
-            ->post('/forgot-password', ['email' => 'nobody@example.com'])
-            ->assertRedirect('/forgot-password')
-            ->assertSessionHas('status');
-    }
-
-    public function test_the_mailpit_redirect_never_happens_outside_local(): void
-    {
-        Notification::fake();
-        $this->runInEnvironmentWithMailpit('production');
-
-        $user = User::factory()->create();
-
-        $this->from('/forgot-password')
-            ->post('/forgot-password', ['email' => $user->email])
-            ->assertRedirect('/forgot-password')
-            ->assertSessionHas('status');
-    }
-
     public function test_a_mail_failure_shows_an_error_instead_of_crashing(): void
     {
         Password::shouldReceive('sendResetLink')->andThrow(new RuntimeException('SMTP is down'));
@@ -160,18 +123,5 @@ class PasswordResetTest extends TestCase
 
             return true;
         });
-    }
-
-    /**
-     * Run the request in the given environment with a Mailpit inbox configured.
-     *
-     * Leaving the "testing" environment re-enables CSRF checks, so they are
-     * turned off here to keep the request focused on the redirect.
-     */
-    private function runInEnvironmentWithMailpit(string $environment): void
-    {
-        $this->app['env'] = $environment;
-        config(['mail.mailpit_url' => 'http://localhost:8025']);
-        $this->withoutMiddleware(PreventRequestForgery::class);
     }
 }

@@ -38,7 +38,7 @@
                         <td style="text-align:right;">{{ $user->reviews_count }}</td>
                         <td style="text-align:right;">{{ $user->diary_entries_count }}</td>
                         <td>
-                            <span class="status status-{{ $state === 'active' ? 'active' : ($state === 'admin' ? 'admin' : ($state === 'banned' ? 'banned' : 'suspended')) }}">
+                            <span class="status status-{{ $state === 'active' ? 'active' : ($state === 'banned' ? 'banned' : 'suspended') }}">
                                 {{ ucfirst($state) }}
                             </span>
                             @if($user->is_featured) <span class="badge" style="font-size:9px;">Featured</span> @endif

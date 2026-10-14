@@ -13,10 +13,10 @@ class ReviewPolicy
     }
 
     /**
-     * Authors delete their own reviews; admins remove inappropriate ones.
+     * Authors delete their own reviews. (Admins remove inappropriate ones through admin.reviews.destroy.)
      */
     public function delete(User $user, Review $review): bool
     {
-        return $user->id === $review->user_id || $user->isAdmin();
+        return $user->id === $review->user_id;
     }
 }

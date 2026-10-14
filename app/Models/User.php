@@ -12,7 +12,7 @@ class User extends Authenticatable
     use HasFactory, Notifiable;
 
     /**
-     * Role, moderation and curation fields are deliberately not fillable; set them with forceFill().
+     * Moderation and curation fields are deliberately not fillable; set them with forceFill().
      */
     protected $fillable = [
         'name', 'email', 'password',
@@ -21,12 +21,18 @@ class User extends Authenticatable
 
     protected $hidden = ['password', 'remember_token'];
 
+    /**
+     * Matches the column default, so new members get activity emails before they're reloaded.
+     */
+    protected $attributes = ['email_notifications' => true];
+
     protected $casts = [
         'email_verified_at' => 'datetime',
         'suspended_at' => 'datetime',
         'suspended_until' => 'datetime',
         'banned_at' => 'datetime',
         'is_featured' => 'boolean',
+        'email_notifications' => 'boolean',
         'password' => 'hashed',
     ];
 
@@ -110,11 +116,6 @@ class User extends Authenticatable
             ->withTimestamps();
     }
 
-    public function isAdmin(): bool
-    {
-        return $this->role === 'admin';
-    }
-
     /**
      * Suspended right now: a suspension exists and has not expired
      * (no end date means until an admin lifts it).
@@ -131,14 +132,13 @@ class User extends Authenticatable
     }
 
     /**
-     * One of: banned, suspended, admin, active.
+     * One of: banned, suspended, active. (Administrators live in the `admins` table.)
      */
     public function accountStatus(): string
     {
         return match (true) {
             $this->isBanned() => 'banned',
             $this->isSuspended() => 'suspended',
-            $this->isAdmin() => 'admin',
             default => 'active',
         };
     }

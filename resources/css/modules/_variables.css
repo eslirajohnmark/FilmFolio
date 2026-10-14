@@ -76,7 +76,7 @@
     --gap-lg: 40px;
 
     /* Cinema background (auth). Stored locally so it works offline. */
-    --cinema-image: url('/images/cinema.jpg');
+    --cinema-image: url('/images/cinema-seats.jpg');
 
     /* Transitions */
     --t-fast: 0.15s ease;

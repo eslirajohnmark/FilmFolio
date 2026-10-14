@@ -4,6 +4,7 @@ namespace Tests\Feature;
 
 use App\Livewire\ActivityFeed;
 use App\Models\Activity;
+use App\Models\Admin;
 use App\Models\Film;
 use App\Models\FilmList;
 use App\Models\User;
@@ -45,13 +46,15 @@ class FeedVisibilityTest extends TestCase
             ->assertDontSee('Secret Stash');
     }
 
-    public function test_admin_logins_are_not_shown_in_feeds(): void
+    public function test_admin_sign_ins_are_not_recorded_in_feeds(): void
     {
-        $admin = User::factory()->create(['role' => 'admin', 'username' => 'the_admin']);
-        Activity::log($admin, 'admin_login', $admin);
+        $admin = Admin::factory()->create(['username' => 'the_admin']);
 
-        $this->actingAs($admin)->get('/')->assertOk()->assertDontSee('admin_login');
-        Livewire::actingAs($admin)->test(ActivityFeed::class)
+        $this->post('/admin/login', ['login' => $admin->email, 'password' => 'password']);
+
+        $this->assertSame(0, Activity::count());
+        Livewire::actingAs(User::factory()->create())->test(ActivityFeed::class)
+            ->set('scope', 'global')
             ->assertSee('Nothing here yet');
     }
 

@@ -5,10 +5,14 @@
 @section('content')
 <div class="container">
     <div class="review-footer" style="margin-bottom:8px;">
-        <img src="{{ $list->user->avatarUrl() }}" class="activity-avatar" style="width:28px;height:28px;" alt="">
+        <img src="{{ $list->user?->avatarUrl() ?? asset('images/default-avatar.svg') }}" class="activity-avatar" style="width:28px;height:28px;" alt="">
         <span>
             {{ $list->is_official ? 'Crew Pick by' : 'List by' }}
-            <a href="{{ route('profile.show', $list->user) }}" class="review-author">{{ $list->user->username ?? $list->user->name }}</a>
+            @if($list->user)
+                <a href="{{ route('profile.show', $list->user) }}" class="review-author">{{ $list->ownerName() }}</a>
+            @else
+                <span class="review-author">{{ $list->ownerName() }}</span>
+            @endif
         </span>
     </div>
     <h1 class="film-title" style="font-size:32px;">{{ $list->name }}</h1>

@@ -24,20 +24,6 @@ class PageRenderTest extends TestCase
         $this->actingAs($user)->get(route('watchlist.index'))->assertOk()->assertSee('Must See');
     }
 
-    public function test_journal_shows_written_reviews_grouped_by_month(): void
-    {
-        $film = Film::factory()->create();
-        Review::factory()->for(User::factory())->for($film)->create(['body' => 'Short and sweet.', 'created_at' => '2026-11-15']);
-        Review::factory()->for(User::factory())->for($film)->create(['body' => 'Rating only', 'created_at' => '2026-10-02'])
-            ->forceFill(['body' => null])->save();
-
-        $this->get(route('journal.index'))
-            ->assertOk()
-            ->assertSee('November 2026')
-            ->assertSee('Short and sweet.')
-            ->assertDontSee('October 2026');
-    }
-
     public function test_film_page_shows_reviews_and_average_rating(): void
     {
         $film = Film::factory()->create();

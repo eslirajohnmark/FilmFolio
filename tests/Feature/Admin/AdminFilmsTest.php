@@ -2,8 +2,8 @@
 
 namespace Tests\Feature\Admin;
 
+use App\Models\Admin;
 use App\Models\Film;
-use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Http;
 use Tests\TestCase;
@@ -12,14 +12,14 @@ class AdminFilmsTest extends TestCase
 {
     use RefreshDatabase;
 
-    private function admin(): User
+    private function admin(): Admin
     {
-        return User::factory()->create(['role' => 'admin']);
+        return Admin::factory()->create();
     }
 
     public function test_admins_can_add_a_teaser_with_a_youtube_trailer(): void
     {
-        $this->actingAs($this->admin())->post(route('admin.films.store'), [
+        $this->actingAsAdmin($this->admin())->post(route('admin.films.store'), [
             'title' => 'Future Film',
             'year' => now()->year + 1,
             'genre' => 'Sci-Fi',
@@ -35,7 +35,7 @@ class AdminFilmsTest extends TestCase
 
     public function test_invalid_trailer_links_are_rejected(): void
     {
-        $this->actingAs($this->admin())->post(route('admin.films.store'), [
+        $this->actingAsAdmin($this->admin())->post(route('admin.films.store'), [
             'title' => 'Bad Trailer',
             'year' => 2024,
             'trailer' => 'https://vimeo.com/123',
@@ -47,14 +47,14 @@ class AdminFilmsTest extends TestCase
         $admin = $this->admin();
         $film = Film::factory()->create(['title' => 'Old Title', 'year' => 2001, 'is_teaser' => false]);
 
-        $this->actingAs($admin)->put(route('admin.films.update', $film), ['title' => 'New Title', 'year' => 2002])
+        $this->actingAsAdmin($admin)->put(route('admin.films.update', $film), ['title' => 'New Title', 'year' => 2002])
             ->assertRedirect(route('admin.films.edit', $film));
         $this->assertSame('New Title', $film->fresh()->title);
 
-        $this->actingAs($admin)->patch(route('admin.films.teaser', $film));
+        $this->actingAsAdmin($admin)->patch(route('admin.films.teaser', $film));
         $this->assertTrue($film->fresh()->is_teaser);
 
-        $this->actingAs($admin)->delete(route('admin.films.destroy', $film));
+        $this->actingAsAdmin($admin)->delete(route('admin.films.destroy', $film));
         $this->assertModelMissing($film);
     }
 
@@ -68,7 +68,7 @@ class AdminFilmsTest extends TestCase
             'videos' => ['results' => []],
         ])]);
 
-        $this->actingAs($this->admin())->post(route('admin.films.import'), ['tmdb_id' => 42, 'is_teaser' => '1']);
+        $this->actingAsAdmin($this->admin())->post(route('admin.films.import'), ['tmdb_id' => 42, 'is_teaser' => '1']);
 
         $this->assertTrue(Film::where('tmdb_id', 42)->sole()->is_teaser);
     }
@@ -78,8 +78,8 @@ class AdminFilmsTest extends TestCase
         $admin = $this->admin();
         $film = Film::factory()->create();
 
-        $this->actingAs($admin)->get(route('admin.films.index'))->assertOk()->assertSee($film->title);
-        $this->actingAs($admin)->get(route('admin.films.create'))->assertOk();
-        $this->actingAs($admin)->get(route('admin.films.edit', $film))->assertOk();
+        $this->actingAsAdmin($admin)->get(route('admin.films.index'))->assertOk()->assertSee($film->title);
+        $this->actingAsAdmin($admin)->get(route('admin.films.create'))->assertOk();
+        $this->actingAsAdmin($admin)->get(route('admin.films.edit', $film))->assertOk();
     }
 }

@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Models\Admin;
 use App\Models\DiaryEntry;
 use App\Models\Film;
 use App\Models\User;
@@ -23,9 +24,9 @@ class LayoutAndAuthPagesTest extends TestCase
 
     public function test_shortcut_sends_admins_straight_to_the_admin_panel(): void
     {
-        $admin = User::factory()->create(['role' => 'admin']);
+        $admin = Admin::factory()->create();
 
-        $this->actingAs($admin)->get('/')->assertSee(json_encode(route('admin.dashboard')), false);
+        $this->actingAsAdmin($admin)->get('/')->assertSee(json_encode(route('admin.dashboard')), false);
     }
 
     public function test_guest_home_page_matches_the_landing_design(): void

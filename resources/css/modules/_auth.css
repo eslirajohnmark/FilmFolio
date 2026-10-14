@@ -21,16 +21,16 @@ body.auth-page { background: #0b0810; }
     position: fixed;
     z-index: -1;
 }
-/* The photo: blurred, red seats shifted to purple... */
+/* The purple cinema-seat photo, softly blurred... */
 .auth-wrapper::before {
     inset: -40px;
     background: var(--cinema-image) center / cover, #1a1024;
-    filter: blur(5px) hue-rotate(-75deg) saturate(1.3) brightness(1.35);
+    filter: blur(4px);
 }
 /* ...then lightly darkened */
 .auth-wrapper::after {
     inset: 0;
-    background: radial-gradient(ellipse at 50% 45%, rgba(20, 10, 30, 0.15), rgba(14, 8, 22, 0.55));
+    background: radial-gradient(ellipse at 50% 45%, rgba(20, 10, 30, 0.1), rgba(14, 8, 22, 0.5));
 }
 
 .auth-close {

@@ -24,9 +24,7 @@ class PasswordResetLinkController extends Controller
      * Email a password reset link to the member with this email address or username.
      *
      * The response is the same whether or not an account matches, so the form
-     * can't be used to find out who is registered. The one exception is local
-     * development with a Mailpit inbox configured, where a sent email takes the
-     * member straight to that inbox for testing.
+     * can't be used to find out who is registered.
      */
     public function store(Request $request): RedirectResponse
     {
@@ -37,16 +35,12 @@ class PasswordResetLinkController extends Controller
         $login = trim($request->string('email'));
 
         try {
-            $status = Password::sendResetLink(str_contains($login, '@') ? ['email' => $login] : ['username' => $login]);
+            Password::sendResetLink(str_contains($login, '@') ? ['email' => $login] : ['username' => $login]);
         } catch (Throwable $e) {
             Log::error("Password reset email could not be sent: {$e->getMessage()}");
 
             return back()->withInput($request->only('email'))
                 ->withErrors(['email' => "We couldn't send the email right now. Please try again in a minute."]);
-        }
-
-        if ($status === Password::RESET_LINK_SENT && app()->isLocal() && filled(config('mail.mailpit_url'))) {
-            return redirect()->away(config('mail.mailpit_url'));
         }
 
         return back()->with('status', 'If an account matches '.$login.', a password reset link is on its way. Check your inbox (and your spam folder).');

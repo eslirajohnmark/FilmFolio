@@ -10,6 +10,15 @@
                 <button class="icon-btn icon-delete" title="Delete">🗑</button>
             </form>
         </div>
+    @elseif(auth('admin')->check())
+        <div class="card-actions">
+            <form method="POST" action="{{ route('admin.lists.destroy', $list) }}"
+                  onsubmit="return confirm('Remove this list? (admin)')" style="display:inline;">
+                @csrf
+                @method('DELETE')
+                <button class="icon-btn icon-delete" title="Remove (admin)">🗑</button>
+            </form>
+        </div>
     @endcan
 
     <a href="{{ route('lists.show', $list) }}" class="poster-stack" aria-hidden="true" tabindex="-1">
@@ -25,7 +34,7 @@
     <h3><a href="{{ route('lists.show', $list) }}">{{ $list->name }}</a></h3>
     <div class="meta">
         @if($list->relationLoaded('user'))
-            <span class="owner">{{ $list->user->username ?? $list->user->name }}</span>
+            <span class="owner">{{ $list->ownerName() }}</span>
         @endif
         <span>{{ $list->films_count }} {{ Str::plural('Film', $list->films_count) }}</span>
         @isset($list->likes_count)

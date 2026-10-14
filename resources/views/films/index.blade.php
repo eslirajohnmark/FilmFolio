@@ -12,6 +12,8 @@
         </a>
     </div>
 
+    @include('partials.suggestions')
+
     @livewire('film-search')
 
     @if($popular->isNotEmpty())

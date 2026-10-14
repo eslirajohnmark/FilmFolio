@@ -23,8 +23,8 @@
 
         <div class="nav-right">
             <a href="{{ route('home') }}" class="nav-link-plain">View site ↗</a>
-            <img src="{{ auth()->user()->avatarUrl() }}" class="nav-avatar" alt="" title="&#64;{{ auth()->user()->username }}">
-            <form method="POST" action="{{ route('logout') }}">
+            <img src="{{ auth('admin')->user()->avatarUrl() }}" class="nav-avatar" alt="" title="&#64;{{ auth('admin')->user()->username }}">
+            <form method="POST" action="{{ route('admin.logout') }}">
                 @csrf
                 <button type="submit" class="nav-link-plain">Sign out</button>
             </form>

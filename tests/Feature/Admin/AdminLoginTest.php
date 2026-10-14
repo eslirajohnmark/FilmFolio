@@ -2,6 +2,7 @@
 
 namespace Tests\Feature\Admin;
 
+use App\Models\Admin;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
@@ -12,18 +13,19 @@ class AdminLoginTest extends TestCase
 
     public function test_admins_can_authenticate(): void
     {
-        $admin = User::factory()->create(['role' => 'admin']);
+        $admin = Admin::factory()->create();
 
         $response = $this->post('/admin/login', [
             'login' => $admin->email,
             'password' => 'password',
         ]);
 
-        $this->assertAuthenticatedAs($admin);
+        $this->assertAuthenticatedAs($admin, 'admin');
+        $this->assertGuest('web');
         $response->assertRedirect(route('admin.dashboard'));
     }
 
-    public function test_non_admins_are_rejected(): void
+    public function test_member_accounts_can_not_sign_in_to_the_admin_panel(): void
     {
         $user = User::factory()->create();
 
@@ -32,13 +34,14 @@ class AdminLoginTest extends TestCase
             'password' => 'password',
         ]);
 
-        $this->assertGuest();
+        $this->assertGuest('admin');
+        $this->assertGuest('web');
         $response->assertSessionHasErrors('login');
     }
 
     public function test_admin_login_is_rate_limited(): void
     {
-        $admin = User::factory()->create(['role' => 'admin']);
+        $admin = Admin::factory()->create();
 
         foreach (range(1, 5) as $attempt) {
             $this->post('/admin/login', ['login' => $admin->email, 'password' => 'wrong-password']);
@@ -49,7 +52,19 @@ class AdminLoginTest extends TestCase
             'password' => 'password',
         ]);
 
-        $this->assertGuest();
+        $this->assertGuest('admin');
         $response->assertSessionHasErrors('login');
+    }
+
+    public function test_admins_can_sign_out_without_signing_out_the_member_session(): void
+    {
+        $member = User::factory()->create();
+
+        $this->actingAs($member)->actingAsAdmin()
+            ->post(route('admin.logout'))
+            ->assertRedirect(route('admin.login'));
+
+        $this->assertGuest('admin');
+        $this->assertAuthenticatedAs($member, 'web');
     }
 }

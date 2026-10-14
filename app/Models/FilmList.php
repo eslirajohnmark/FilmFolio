@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class FilmList extends Model
 {
     /**
-     * `is_official` and `is_featured` are admin-only; set them with forceFill().
+     * `is_official`, `is_featured` and `admin_id` are admin-only; set them with forceFill().
      */
     protected $fillable = ['user_id', 'name', 'description', 'visibility', 'genre', 'film_count', 'cover'];
 
@@ -17,9 +17,28 @@ class FilmList extends Model
         'is_featured' => 'boolean',
     ];
 
+    /**
+     * The member who made the list (null for official lists made by an admin).
+     */
     public function user()
     {
         return $this->belongsTo(User::class);
+    }
+
+    /**
+     * The admin who made an official "Crew Pick" list.
+     */
+    public function admin()
+    {
+        return $this->belongsTo(Admin::class);
+    }
+
+    /**
+     * Name shown as the list's author: the member's username, or "FilmFolio Crew" for admin lists.
+     */
+    public function ownerName(): string
+    {
+        return $this->user?->username ?? $this->user?->name ?? 'FilmFolio Crew';
     }
 
     public function films()

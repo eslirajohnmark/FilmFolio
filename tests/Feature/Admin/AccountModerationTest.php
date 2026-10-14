@@ -2,27 +2,25 @@
 
 namespace Tests\Feature\Admin;
 
+use App\Livewire\Admin\UserTable;
+use App\Models\Admin;
 use App\Models\Film;
 use App\Models\Review;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Livewire\Livewire;
 use Tests\TestCase;
 
 class AccountModerationTest extends TestCase
 {
     use RefreshDatabase;
 
-    private function admin(): User
-    {
-        return User::factory()->create(['role' => 'admin']);
-    }
-
     public function test_account_page_shows_member_activity_and_reviews(): void
     {
         $member = User::factory()->create(['username' => 'reviewer1']);
         Review::factory()->for($member)->for(Film::factory())->create(['body' => 'Member review text']);
 
-        $this->actingAs($this->admin())
+        $this->actingAsAdmin()
             ->get(route('admin.accounts.show', $member))
             ->assertOk()
             ->assertSee('reviewer1')
@@ -33,7 +31,7 @@ class AccountModerationTest extends TestCase
     {
         $member = User::factory()->create();
 
-        $this->actingAs($this->admin())
+        $this->actingAsAdmin()
             ->post(route('admin.accounts.suspend', $member), ['days' => 7, 'reason' => 'Spam'])
             ->assertRedirect();
 
@@ -61,50 +59,53 @@ class AccountModerationTest extends TestCase
 
     public function test_admins_can_ban_and_reinstate_members(): void
     {
-        $admin = $this->admin();
+        $admin = Admin::factory()->create();
         $member = User::factory()->create();
 
-        $this->actingAs($admin)->post(route('admin.accounts.ban', $member), ['reason' => 'Abuse']);
+        $this->actingAsAdmin($admin)->post(route('admin.accounts.ban', $member), ['reason' => 'Abuse']);
         $this->assertTrue($member->fresh()->isBanned());
 
-        $this->actingAs($admin)->post(route('admin.accounts.reinstate', $member));
+        $this->actingAsAdmin($admin)->post(route('admin.accounts.reinstate', $member));
         $member->refresh();
         $this->assertFalse($member->isBanned());
         $this->assertFalse($member->isSuspended());
     }
 
-    public function test_admin_accounts_can_not_be_suspended_banned_or_deleted(): void
+    public function test_admins_are_not_listed_or_managed_as_member_accounts(): void
     {
-        $admin = $this->admin();
-        $otherAdmin = $this->admin();
+        $admin = Admin::factory()->create(['username' => 'boss_admin']);
+        User::factory()->create(['username' => 'regular_member']);
 
-        $this->actingAs($admin)->post(route('admin.accounts.suspend', $admin), ['days' => 1]);
-        $this->actingAs($admin)->post(route('admin.accounts.ban', $otherAdmin));
-        $this->actingAs($admin)->delete(route('admin.accounts.destroy', $otherAdmin));
+        $this->actingAsAdmin($admin);
 
-        $this->assertFalse($admin->fresh()->isSuspended());
-        $this->assertFalse($otherAdmin->fresh()->isBanned());
-        $this->assertModelExists($otherAdmin);
+        Livewire::test(UserTable::class)
+            ->assertSee('regular_member')
+            ->assertDontSee('boss_admin');
+
+        $this->assertDatabaseMissing('users', ['email' => $admin->email]);
     }
 
     public function test_admins_can_feature_and_delete_members(): void
     {
-        $admin = $this->admin();
+        $admin = Admin::factory()->create();
         $member = User::factory()->create();
 
-        $this->actingAs($admin)->patch(route('admin.accounts.feature', $member));
+        $this->actingAsAdmin($admin)->patch(route('admin.accounts.feature', $member));
         $this->assertTrue($member->fresh()->is_featured);
 
-        $this->actingAs($admin)->delete(route('admin.accounts.destroy', $member))->assertRedirect(route('admin.accounts.index'));
+        $this->actingAsAdmin($admin)->delete(route('admin.accounts.destroy', $member))->assertRedirect(route('admin.accounts.index'));
         $this->assertModelMissing($member);
     }
 
     public function test_members_can_not_use_admin_pages(): void
     {
         $member = User::factory()->create();
+        $target = User::factory()->create();
 
-        $this->actingAs($member)->get(route('admin.dashboard'))->assertForbidden();
-        $this->actingAs($member)->get(route('admin.accounts.index'))->assertForbidden();
-        $this->actingAs($member)->post(route('admin.accounts.ban', User::factory()->create()))->assertForbidden();
+        $this->actingAs($member)->get(route('admin.dashboard'))->assertRedirect(route('admin.login'));
+        $this->actingAs($member)->get(route('admin.accounts.index'))->assertRedirect(route('admin.login'));
+        $this->actingAs($member)->post(route('admin.accounts.ban', $target))->assertRedirect(route('admin.login'));
+
+        $this->assertFalse($target->fresh()->isBanned());
     }
 }

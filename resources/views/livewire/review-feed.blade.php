@@ -1,5 +1,5 @@
 <div>
-    <div class="section-label">{{ $heading }} <a href="{{ route('journal.index') }}">Journal →</a></div>
+    <div class="section-label">{{ $heading }}</div>
 
     <div class="review-grid">
         @forelse($reviews as $review)

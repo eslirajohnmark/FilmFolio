@@ -9,6 +9,8 @@
         <button class="btn btn-primary">Search</button>
     </form>
 
+    @include('partials.suggestions')
+
     @if(mb_strlen($q) < 2)
         <p class="empty-state">Search for a film to open its page, then rate it, review it or log a watch. Members and lists show up here too.</p>
     @else

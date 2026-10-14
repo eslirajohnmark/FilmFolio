@@ -1,5 +1,5 @@
 <x-guest-layout heading="Create Account" subheading="Join the FilmFolio community">
-    <form method="POST" action="{{ route('register') }}" data-submit-once>
+    <form method="POST" action="{{ route('register') }}" data-submit-once data-clear-on-back autocomplete="off">
         @csrf
 
         <x-auth-input name="name" label="Full Name" icon="user"

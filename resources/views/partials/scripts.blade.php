@@ -12,7 +12,7 @@
     document.addEventListener('keydown', (e) => {
         if (e.ctrlKey && e.shiftKey && e.key.toLowerCase() === 'l') {
             e.preventDefault();
-            window.location.href = @json(auth()->user()?->isAdmin() ? route('admin.dashboard') : route('admin.login'));
+            window.location.href = @json(auth('admin')->check() ? route('admin.dashboard') : route('admin.login'));
         }
     });
 
@@ -22,6 +22,7 @@
         if (! toggle) return;
         const input = document.getElementById(toggle.dataset.target);
         const hidden = input.type === 'password';
+        input.dataset.wasPassword = '1';
         input.type = hidden ? 'text' : 'password';
         toggle.textContent = hidden ? 'Hide' : 'Show';
     });
@@ -47,7 +48,25 @@
         }
     });
     // Coming back with the browser's Back button restores the page as it was; re-enable it
-    window.addEventListener('pageshow', () => {
+    window.addEventListener('pageshow', (e) => {
+        // Restored from the back/forward cache instead of loaded: ask the server again, so a
+        // signed-in visitor going Back to a login page is sent home and never sees that page.
+        if (e.persisted) {
+            window.location.reload();
+            return;
+        }
+
+        // Never show what was typed into sign-in and sign-up forms again (browsers like to
+        // refill them on Back): reset to the page's own values and blank every password.
+        document.querySelectorAll('form[data-clear-on-back]').forEach((form) => {
+            form.reset();
+            form.querySelectorAll('input[type="password"], input[data-was-password]').forEach((input) => {
+                input.value = '';
+                if (input.dataset.wasPassword) input.type = 'password';
+            });
+            form.querySelectorAll('.toggle-password').forEach((toggle) => { toggle.textContent = 'Show'; });
+        });
+
         document.querySelectorAll('form[data-submit-once][data-submitted]').forEach((form) => {
             delete form.dataset.submitted;
             const button = form.querySelector('[type="submit"]');

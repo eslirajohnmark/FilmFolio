@@ -33,7 +33,6 @@ class UserTable extends Component
         'suspended' => 'Suspended',
         'banned' => 'Banned',
         'featured' => 'Featured',
-        'admins' => 'Admins',
     ];
 
     public function updating(): void
@@ -43,7 +42,7 @@ class UserTable extends Component
 
     public function render()
     {
-        abort_unless(auth()->user()?->isAdmin(), 403);
+        abort_unless(auth('admin')->check(), 403);
 
         $activeSuspension = fn (Builder $q) => $q->whereNotNull('suspended_at')
             ->where(fn (Builder $q) => $q->whereNull('suspended_until')->orWhere('suspended_until', '>', now()));
@@ -58,7 +57,6 @@ class UserTable extends Component
             ->when($this->status === 'suspended', fn (Builder $q) => $q->whereNull('banned_at')->where($activeSuspension))
             ->when($this->status === 'banned', fn (Builder $q) => $q->whereNotNull('banned_at'))
             ->when($this->status === 'featured', fn (Builder $q) => $q->where('is_featured', true))
-            ->when($this->status === 'admins', fn (Builder $q) => $q->where('role', 'admin'))
             ->latest()
             ->paginate(15);
 

@@ -35,7 +35,7 @@ class MemberController extends Controller
     public function show(Request $request, User $user): View
     {
         $tab = in_array($request->query('tab'), self::PROFILE_TABS, true) ? $request->query('tab') : 'profile';
-        $isOwner = $request->user()?->is($user) || $request->user()?->isAdmin();
+        $isOwner = $request->user()?->is($user) || auth('admin')->check();
 
         $user->loadCount([
             'watchedFilms',

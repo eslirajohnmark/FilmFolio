@@ -1,0 +1,35 @@
+# Secrets and local-only files: never baked into the image
+.env
+.env.*
+!.env.example
+storage/app/backups
+docker/mysql
+
+# Rebuilt inside the image
+vendor
+node_modules
+public/build
+public/hot
+public/storage
+bootstrap/cache/*.php
+
+# Runtime clutter
+storage/logs/*
+storage/framework/cache/data/*
+storage/framework/sessions/*
+storage/framework/views/*
+storage/framework/testing
+.phpunit.result.cache
+
+# Development tooling
+.git
+.github
+.claude
+.ai
+.idea
+.vscode
+tests
+phpunit.xml
+docker-compose*.yml
+Dockerfile
+.dockerignore

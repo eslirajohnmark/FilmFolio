@@ -5,6 +5,7 @@ namespace App\Livewire;
 use App\Models\Activity;
 use App\Models\Follow;
 use App\Models\User;
+use App\Notifications\NewFollower;
 use Livewire\Component;
 
 class FollowButton extends Component
@@ -51,6 +52,7 @@ class FollowButton extends Component
             if ($follow->wasRecentlyCreated) {
                 $this->followersCount++;
                 Activity::log(auth()->user(), 'followed', $this->user);
+                $this->user->notify(new NewFollower(auth()->user()));
             }
         }
 

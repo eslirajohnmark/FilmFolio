@@ -24,6 +24,8 @@
             </div>
         @endif
 
+        @include('partials.suggestions', ['style' => 'plate'])
+
         <div class="section-label">Popular films this week <a href="{{ route('films.index') }}">More →</a></div>
         <div class="poster-row">
             @forelse($popularFilms as $film)
@@ -61,6 +63,8 @@
     </section>
 
     <div class="container home-sections">
+        @include('partials.suggestions', ['style' => 'plate'])
+
         <div class="section-label">Just reviewed...</div>
         <div class="poster-row">
             @forelse($justReviewed as $film)

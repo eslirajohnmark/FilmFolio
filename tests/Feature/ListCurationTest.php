@@ -105,11 +105,22 @@ class ListCurationTest extends TestCase
     {
         $review = Review::factory()->for(User::factory())->for(Film::factory())->create();
 
-        $this->actingAs(User::factory()->create(['role' => 'admin']))
-            ->delete(route('reviews.destroy', $review))
+        $this->actingAsAdmin()
+            ->delete(route('admin.reviews.destroy', $review))
             ->assertRedirect();
 
         $this->assertModelMissing($review);
+    }
+
+    public function test_members_can_not_use_the_admin_removal_route(): void
+    {
+        $review = Review::factory()->for(User::factory())->for(Film::factory())->create();
+
+        $this->actingAs(User::factory()->create())
+            ->delete(route('admin.reviews.destroy', $review))
+            ->assertRedirect(route('admin.login'));
+
+        $this->assertModelExists($review);
     }
 
     public function test_profile_has_ratings_and_activity_tabs(): void
@@ -128,6 +139,6 @@ class ListCurationTest extends TestCase
         $member = User::factory()->create();
 
         $this->actingAs($member)->get(route('films.index'))
-            ->assertSeeInOrder(['>Home<', '>Films<', '>Lists<', '>Members<', '>Journal<', '>Teasers<', '>Profile<'], false);
+            ->assertSeeInOrder(['>Home<', '>Films<', '>Lists<', '>Members<', '>Teasers<', '>Profile<'], false);
     }
 }

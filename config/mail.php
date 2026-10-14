@@ -81,11 +81,15 @@ return [
 
         'failover' => [
             'transport' => 'failover',
-            'mailers' => [
-                'smtp',
-                'log',
-            ],
+            'mailers' => explode(',', env('MAIL_FAILOVER_MAILERS', 'smtp,log')),
             'retry_after' => 60,
+        ],
+
+        // Resend's HTTP API (App\Services\ResendApiTransport): faster and steadier than SMTP.
+        'resend-api' => [
+            'transport' => 'resend-api',
+            'key' => env('Resend_API_key', env('RESEND_API_KEY')),
+            'timeout' => env('MAIL_TIMEOUT', 10),
         ],
 
         'roundrobin' => [
@@ -114,18 +118,5 @@ return [
         'address' => env('MAIL_FROM_ADDRESS', 'hello@example.com'),
         'name' => env('MAIL_FROM_NAME', env('APP_NAME', 'Laravel')),
     ],
-
-    /*
-    |--------------------------------------------------------------------------
-    | Local Mailpit Inbox
-    |--------------------------------------------------------------------------
-    |
-    | When set in the local environment, members who request a password reset
-    | are sent straight to this Mailpit inbox so the email can be opened
-    | without a real mailbox. It has no effect in any other environment.
-    |
-    */
-
-    'mailpit_url' => env('MAILPIT_URL'),
 
 ];

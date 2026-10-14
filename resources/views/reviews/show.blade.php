@@ -51,6 +51,12 @@
                             @method('DELETE')
                             <button class="btn-ghost" style="font-size:12px;">Delete</button>
                         </form>
+                    @elseif(auth('admin')->check())
+                        <form method="POST" action="{{ route('admin.comments.destroy', $comment) }}" onsubmit="return confirm('Remove this comment? (admin)')">
+                            @csrf
+                            @method('DELETE')
+                            <button class="btn-ghost" style="font-size:12px;">Remove (admin)</button>
+                        </form>
                     @endcan
                 </div>
                 <div class="comment-text">{{ $comment->body }}</div>

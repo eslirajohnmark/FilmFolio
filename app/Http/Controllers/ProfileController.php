@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\ProfileUpdateRequest;
+use App\Services\BrowserSessions;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -15,11 +16,25 @@ class ProfileController extends Controller
     /**
      * Display the user's profile form.
      */
-    public function edit(Request $request): View
+    public function edit(Request $request, BrowserSessions $sessions): View
     {
         return view('profile.edit', [
             'user' => $request->user(),
+            'sessions' => $sessions->forUser($request->user(), $request->session()->getId()),
+            'sessionsTracked' => $sessions->isTracked(),
         ]);
+    }
+
+    /**
+     * Turn activity emails (new followers, comments on reviews) on or off.
+     */
+    public function updateNotifications(Request $request): RedirectResponse
+    {
+        $request->user()->forceFill(['email_notifications' => $request->boolean('email_notifications')])->save();
+
+        return Redirect::route('profile.edit')->with('status', $request->user()->email_notifications
+            ? 'Email notifications are on.'
+            : 'Email notifications are off.');
     }
 
     /**

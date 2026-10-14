@@ -58,7 +58,7 @@
     @else
         <p class="empty-state text-center">
             No upcoming films yet.
-            @if(auth()->user()?->isAdmin())
+            @if(auth('admin')->check())
                 Add teasers from the <a href="{{ route('admin.films.index') }}">admin Films page</a> or run <code>php artisan films:sync</code>.
             @endif
         </p>

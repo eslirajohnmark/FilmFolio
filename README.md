@@ -55,11 +55,11 @@ The admin area has its own navigation:
 - **Dashboard** — member counts, popular genres and decades, weekly / monthly / yearly statistics, and a 12-week activity chart.
 - **Films** — add, edit and delete films; mark teasers; set YouTube trailers; import films from TMDB.
 - **Lists** — create official lists ("Crew Picks") by genre or theme, optionally auto-filled with the genre's top-rated films; feature lists; remove inappropriate ones.
-- **Accounts** — search and filter members, view their activity, reviews and lists, suspend (1 day to indefinitely), ban, reinstate, feature or delete accounts, and remove inappropriate reviews. Admin accounts are protected from moderation.
+- **Accounts** — search and filter members, view their activity, reviews and lists, suspend (1 day to indefinitely), ban, reinstate, feature or delete accounts, sign members out of every device, and remove inappropriate reviews. Administrators live in their own `admins` table with a separate sign-in, so they never appear among members.
 
 Suspended and banned members cannot sign in and are signed out on their next request.
 
-In the `local` environment only, `/__dev-login` signs in as the first admin. Never deploy with `APP_ENV=local` or `APP_DEBUG=true`.
+In the `local` environment only, `/__dev-login` signs in to the admin panel as the first admin. Never deploy with `APP_ENV=local` or `APP_DEBUG=true`.
 
 ## Features
 
@@ -67,12 +67,37 @@ Members navigate **Films · Lists · Members · Teasers · Profile**.
 
 - **Films:** browse by poster, search any film (TMDB results are imported on demand), filter and sort, popular this week, popular reviews this week.
 - **Film page:** mark as watched, like, add to watchlist, quick half-star rating, add to lists or your favourite four, ratings histogram, diary logging, reviews.
-- **Reviews:** agree or disagree with reviews, comment on them; edit or delete your own reviews and ratings. Long reviews also appear in the Journal.
+- **Reviews:** agree or disagree with reviews, comment on them; edit or delete your own reviews and ratings.
 - **Lists:** Featured Lists, Recently Popular (by likes), Crew Picks, your own public/private lists with descriptions; list pages show reviews of their films.
 - **Members:** Featured Members, Popular Members and Most Active Reviewers; profiles with Activity, Films, Diary, Reviews, Ratings, Watchlist, Lists and Likes tabs.
 - **Teasers:** upcoming films with an embedded trailer player and description.
 
 Members sign in with their username or email.
+
+## Docker
+
+Needs [Docker Desktop](https://www.docker.com/products/docker-desktop/). Make sure `.env` exists with `APP_KEY`, `TMDB_API_KEY`, `ADMIN_*` and mail settings (see Setup), then:
+
+```sh
+docker compose up -d --build   # first build takes a few minutes
+```
+
+Open http://localhost:8080. Four containers start:
+
+- **app** — the website (PHP 8.3 + Apache), production mode. On start it migrates the database, creates or updates the admin from `ADMIN_*`, and imports films from TMDB if there are none.
+- **queue** — sends the queued emails (welcome, new follower, review comment).
+- **scheduler** — runs the daily film sync.
+- **mysql** — MySQL 8.4, reachable from your machine on port 3307 (so it doesn't clash with Laragon on 3306).
+
+Your `.env` is mounted read-only; Docker overrides the database host, `APP_URL`, `APP_ENV=production` and `APP_DEBUG=false`. Change the port or passwords with `DOCKER_APP_PORT`, `DOCKER_DB_PASSWORD` and `DOCKER_DB_ROOT_PASSWORD` in your shell or a `.env`-style file passed with `--env-file`.
+
+Any `.sql` file in `docker/mysql/init/` is loaded the first time the database starts, so a dump of your local database (`mysqldump -u root filmfolio > docker/mysql/init/01-filmfolio.sql`) brings your members and reviews along. These files are git-ignored because they contain password hashes.
+
+```sh
+docker compose logs -f app     # follow the logs
+docker compose down            # stop; the database and uploads are kept
+docker compose down -v         # stop and delete the database and uploads
+```
 
 ## Tests
 

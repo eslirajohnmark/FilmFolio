@@ -11,7 +11,6 @@
         <li><a href="{{ route('films.index') }}" class="{{ request()->routeIs('films.*', 'search', 'reviews.*') ? 'active' : '' }}">Films</a></li>
         <li><a href="{{ route('lists.index') }}" class="{{ request()->routeIs('lists.*') ? 'active' : '' }}">Lists</a></li>
         <li><a href="{{ route('members.index') }}" class="{{ request()->routeIs('members.*') ? 'active' : '' }}">Members</a></li>
-        <li><a href="{{ route('journal.index') }}" class="{{ request()->routeIs('journal.*') ? 'active' : '' }}">Journal</a></li>
         <li><a href="{{ route('teasers.index') }}" class="{{ request()->routeIs('teasers.*') ? 'active' : '' }}">Teasers</a></li>
     </ul>
 
@@ -25,15 +24,16 @@
                    placeholder="Search films…" aria-label="Search films">
         </form>
 
+        @if(auth('admin')->check())
+            <a href="{{ route('admin.dashboard') }}" class="nav-link-plain" title="Admin dashboard">Admin</a>
+        @endif
+
         @guest
             <a href="{{ route('login') }}" class="nav-link-plain">Login</a>
             <a href="{{ route('register') }}" class="btn-register">Register</a>
         @endguest
 
         @auth
-            @if(auth()->user()->isAdmin())
-                <a href="{{ route('admin.dashboard') }}" class="nav-link-plain" title="Admin dashboard">Admin</a>
-            @endif
 
             <details class="nav-menu">
                 <summary aria-label="Account menu">

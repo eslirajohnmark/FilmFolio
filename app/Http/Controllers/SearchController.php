@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Film;
 use App\Models\FilmList;
 use App\Models\User;
+use App\Services\Recommendations;
 use App\Services\TmdbService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -16,7 +17,7 @@ use Throwable;
 
 class SearchController extends Controller
 {
-    public function index(Request $request, TmdbService $tmdb): View
+    public function index(Request $request, TmdbService $tmdb, Recommendations $recommendations): View
     {
         $q = trim((string) $request->query('q', ''));
 
@@ -27,15 +28,19 @@ class SearchController extends Controller
                 'members' => collect(),
                 'lists' => collect(),
                 'tmdbResults' => collect(),
+                'suggestions' => $recommendations->suggestionsFor(),
             ]);
         }
 
         $like = "%{$q}%";
         $films = Film::where('title', 'like', $like)->orderByDesc('year')->take(24)->get();
 
+        $recommendations->recordSearch($q, $films);
+
         return view('search.index', [
             'q' => $q,
             'films' => $films,
+            'suggestions' => $recommendations->suggestionsFor(),
             'members' => User::where(fn ($query) => $query->where('username', 'like', $like)->orWhere('name', 'like', $like))
                 ->take(8)
                 ->get(),

@@ -46,13 +46,16 @@ class ListController extends Controller
         $data = $request->validated();
 
         $list = new FilmList([
-            'user_id' => $request->user()->id,
             'name' => $data['name'],
             'description' => $data['description'] ?? null,
             'genre' => $data['genre'] ?? null,
             'visibility' => 'public',
         ]);
-        $list->forceFill(['is_official' => true, 'is_featured' => $request->boolean('is_featured')])->save();
+        $list->forceFill([
+            'admin_id' => $request->user('admin')->id,
+            'is_official' => true,
+            'is_featured' => $request->boolean('is_featured'),
+        ])->save();
 
         $autoFill = (int) ($data['auto_fill'] ?? 0);
         if ($autoFill > 0 && $list->genre) {

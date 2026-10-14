@@ -6,12 +6,13 @@ use App\Models\Activity;
 use App\Models\DiaryEntry;
 use App\Models\Film;
 use App\Models\Review;
+use App\Services\Recommendations;
 use Illuminate\Support\Collection;
 use Illuminate\View\View;
 
 class HomeController extends Controller
 {
-    public function index(): View
+    public function index(Recommendations $recommendations): View
     {
         $user = auth()->user();
 
@@ -19,6 +20,7 @@ class HomeController extends Controller
             return view('home', [
                 'user' => null,
                 'justReviewed' => $this->justReviewed(),
+                'suggestions' => $recommendations->suggestionsFor(limit: 5),
             ]);
         }
 
@@ -26,6 +28,7 @@ class HomeController extends Controller
 
         return view('home', [
             'user' => $user,
+            'suggestions' => $recommendations->suggestionsFor(limit: 5),
             'friendsWatching' => DiaryEntry::with(['film', 'user'])
                 ->whereIn('user_id', $followingIds)
                 ->latest('watched_on')

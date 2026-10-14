@@ -2,8 +2,8 @@
 
 namespace Tests\Feature\Admin;
 
+use App\Models\Admin;
 use App\Models\Film;
-use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
@@ -13,9 +13,9 @@ class FilmMediaUploadTest extends TestCase
 {
     use RefreshDatabase;
 
-    private function admin(): User
+    private function admin(): Admin
     {
-        return User::factory()->create(['role' => 'admin']);
+        return Admin::factory()->create();
     }
 
     private function video(string $name = 'clip.mp4'): UploadedFile
@@ -27,7 +27,7 @@ class FilmMediaUploadTest extends TestCase
     {
         Storage::fake('public');
 
-        $this->actingAs($this->admin())->post(route('admin.films.store'), [
+        $this->actingAsAdmin($this->admin())->post(route('admin.films.store'), [
             'title' => 'Kuruko Josh Basketball',
             'year' => 2026,
             'genre' => 'Action',
@@ -54,14 +54,14 @@ class FilmMediaUploadTest extends TestCase
     {
         Storage::fake('public');
         $admin = $this->admin();
-        $this->actingAs($admin)->post(route('admin.films.store'), [
+        $this->actingAsAdmin($admin)->post(route('admin.films.store'), [
             'title' => 'Replace Me', 'year' => 2024,
             'poster_file' => UploadedFile::fake()->image('old.jpg'),
         ]);
         $film = Film::where('title', 'Replace Me')->sole();
         $oldPoster = $film->poster_path;
 
-        $this->actingAs($admin)->put(route('admin.films.update', $film), [
+        $this->actingAsAdmin($admin)->put(route('admin.films.update', $film), [
             'title' => 'Replace Me', 'year' => 2024,
             'poster_file' => UploadedFile::fake()->image('new.jpg'),
         ])->assertSessionHasNoErrors();
@@ -76,7 +76,7 @@ class FilmMediaUploadTest extends TestCase
     {
         Storage::fake('public');
         $admin = $this->admin();
-        $this->actingAs($admin)->post(route('admin.films.store'), [
+        $this->actingAsAdmin($admin)->post(route('admin.films.store'), [
             'title' => 'Keep Me', 'year' => 2024,
             'poster_file' => UploadedFile::fake()->image('keep.jpg'),
             'trailer_file' => $this->video(),
@@ -85,7 +85,7 @@ class FilmMediaUploadTest extends TestCase
         $poster = $film->poster_path;
         $trailer = $film->trailer_path;
 
-        $this->actingAs($admin)->put(route('admin.films.update', $film), [
+        $this->actingAsAdmin($admin)->put(route('admin.films.update', $film), [
             'title' => 'Keep Me (Renamed)', 'year' => 2024, 'poster_path' => '',
         ])->assertSessionHasNoErrors();
 
@@ -99,7 +99,7 @@ class FilmMediaUploadTest extends TestCase
     {
         Storage::fake('public');
         $admin = $this->admin();
-        $this->actingAs($admin)->post(route('admin.films.store'), [
+        $this->actingAsAdmin($admin)->post(route('admin.films.store'), [
             'title' => 'Remove Me', 'year' => 2024,
             'poster_file' => UploadedFile::fake()->image('p.jpg'),
             'teaser_file' => $this->video(),
@@ -107,7 +107,7 @@ class FilmMediaUploadTest extends TestCase
         $film = Film::where('title', 'Remove Me')->sole();
         $files = [$film->poster_path, $film->teaser_path];
 
-        $this->actingAs($admin)->put(route('admin.films.update', $film), [
+        $this->actingAsAdmin($admin)->put(route('admin.films.update', $film), [
             'title' => 'Remove Me', 'year' => 2024,
             'remove_poster' => '1', 'remove_teaser_video' => '1',
         ]);
@@ -122,14 +122,14 @@ class FilmMediaUploadTest extends TestCase
     {
         Storage::fake('public');
         $admin = $this->admin();
-        $this->actingAs($admin)->post(route('admin.films.store'), [
+        $this->actingAsAdmin($admin)->post(route('admin.films.store'), [
             'title' => 'Url Me', 'year' => 2024,
             'poster_file' => UploadedFile::fake()->image('p.jpg'),
         ]);
         $film = Film::where('title', 'Url Me')->sole();
         $uploaded = $film->poster_path;
 
-        $this->actingAs($admin)->put(route('admin.films.update', $film), [
+        $this->actingAsAdmin($admin)->put(route('admin.films.update', $film), [
             'title' => 'Url Me', 'year' => 2024, 'poster_path' => 'https://example.com/poster.jpg',
         ]);
 
@@ -141,7 +141,7 @@ class FilmMediaUploadTest extends TestCase
     {
         Storage::fake('public');
 
-        $this->actingAs($this->admin())->post(route('admin.films.store'), [
+        $this->actingAsAdmin($this->admin())->post(route('admin.films.store'), [
             'title' => 'Bad Upload', 'year' => 2024,
             'trailer_file' => UploadedFile::fake()->create('notes.pdf', 10, 'application/pdf'),
             'poster_file' => UploadedFile::fake()->create('poster.txt', 1, 'text/plain'),
@@ -154,7 +154,7 @@ class FilmMediaUploadTest extends TestCase
     {
         Storage::fake('public');
         $admin = $this->admin();
-        $this->actingAs($admin)->post(route('admin.films.store'), [
+        $this->actingAsAdmin($admin)->post(route('admin.films.store'), [
             'title' => 'Delete Me', 'year' => 2024,
             'poster_file' => UploadedFile::fake()->image('p.jpg'),
             'trailer_file' => $this->video(),
@@ -162,7 +162,7 @@ class FilmMediaUploadTest extends TestCase
         $film = Film::where('title', 'Delete Me')->sole();
         $files = [$film->poster_path, $film->trailer_path];
 
-        $this->actingAs($admin)->delete(route('admin.films.destroy', $film));
+        $this->actingAsAdmin($admin)->delete(route('admin.films.destroy', $film));
 
         Storage::disk('public')->assertMissing($files);
     }

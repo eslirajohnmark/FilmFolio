@@ -25,3 +25,6 @@ _ide_helper.php
 Homestead.json
 Homestead.yaml
 Thumbs.db
+
+# Database snapshot loaded into the Docker MySQL on first start (contains password hashes)
+/docker/mysql/init/*.sql

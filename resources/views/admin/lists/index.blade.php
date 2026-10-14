@@ -44,7 +44,13 @@
                         @if($list->is_official) <span class="badge">Crew Pick</span> @endif
                         @if($list->genre) <span class="text-muted" style="font-size:12px;">· {{ $list->genre }}</span> @endif
                     </td>
-                    <td><a href="{{ route('admin.accounts.show', $list->user) }}">&#64;{{ $list->user->username ?? $list->user->name }}</a></td>
+                    <td>
+                        @if($list->user)
+                            <a href="{{ route('admin.accounts.show', $list->user) }}">&#64;{{ $list->ownerName() }}</a>
+                        @else
+                            {{ $list->ownerName() }}
+                        @endif
+                    </td>
                     <td style="text-align:right;">{{ $list->films_count }}</td>
                     <td style="text-align:right;">{{ $list->likes_count }}</td>
                     <td>{{ ucfirst($list->visibility) }}</td>

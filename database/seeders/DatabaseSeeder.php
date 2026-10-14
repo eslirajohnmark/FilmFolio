@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\Activity;
+use App\Models\Admin;
 use App\Models\DiaryEntry;
 use App\Models\Film;
 use App\Models\FilmList;
@@ -19,12 +20,12 @@ class DatabaseSeeder extends Seeder
 {
     public function run(): void
     {
-        // -------- Admin (from ADMIN_* in .env) + users --------
+        // -------- Admin (from ADMIN_* in .env, in the `admins` table) + demo members --------
         $this->call(AdminSeeder::class);
-        $admin = User::where('email', Str::lower(config('filmfolio.admin.email')))->firstOrFail();
+        $admin = Admin::where('email', Str::lower(config('filmfolio.admin.email')))->firstOrFail();
 
         $users = User::factory(30)->create();
-        $allUsers = $users->push($admin);
+        $allUsers = $users;
 
         // -------- Films from TMDB (fallback to fake) --------
         if (config('services.tmdb.key')) {
@@ -150,13 +151,12 @@ class DatabaseSeeder extends Seeder
         // -------- Crew Picks: official lists for the top genres --------
         Film::whereNotNull('genre')->distinct()->pluck('genre')->take(3)->each(function (string $genre) use ($admin) {
             $list = new FilmList([
-                'user_id' => $admin->id,
                 'name' => "Essential {$genre}",
                 'description' => "The FilmFolio crew's favourite {$genre} films.",
                 'genre' => $genre,
                 'visibility' => 'public',
             ]);
-            $list->forceFill(['is_official' => true])->save();
+            $list->forceFill(['admin_id' => $admin->id, 'is_official' => true])->save();
 
             $topRated = Film::where('genre', $genre)->withAvg('reviews', 'rating')->orderByDesc('reviews_avg_rating')->take(8)->pluck('id');
             $list->films()->attach($topRated->values()->mapWithKeys(fn ($id, $i) => [$id => ['position' => $i + 1]]));

@@ -3,6 +3,7 @@
 namespace App\Livewire;
 
 use App\Models\Film;
+use App\Services\Recommendations;
 use Livewire\Component;
 use Livewire\WithPagination;
 
@@ -42,6 +43,21 @@ class FilmSearch extends Component
     public function updating(): void
     {
         $this->resetPage();
+    }
+
+    /**
+     * Typing a genre ("horror", "scary"…) into the filter counts towards suggestions.
+     */
+    public function updatedQ(): void
+    {
+        app(Recommendations::class)->recordSearch($this->q);
+    }
+
+    public function updatedGenre(): void
+    {
+        if ($this->genre !== '') {
+            app(Recommendations::class)->recordFilter($this->genre);
+        }
     }
 
     public function render()

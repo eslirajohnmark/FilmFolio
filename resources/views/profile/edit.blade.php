@@ -8,6 +8,8 @@
 
     @include('profile.partials.update-profile-information-form')
     @include('profile.partials.update-password-form')
+    @include('profile.partials.email-notifications-form')
+    @include('profile.partials.browser-sessions')
     @include('profile.partials.delete-user-form')
 </div>
 @endsection

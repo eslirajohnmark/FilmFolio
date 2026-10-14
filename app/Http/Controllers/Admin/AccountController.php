@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use App\Services\BrowserSessions;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
@@ -22,7 +23,7 @@ class AccountController extends Controller
         return view('admin.accounts.index');
     }
 
-    public function show(User $user): View
+    public function show(User $user, BrowserSessions $sessions): View
     {
         $user->loadCount(['reviews', 'diaryEntries', 'filmLists', 'followers', 'following']);
 
@@ -32,15 +33,23 @@ class AccountController extends Controller
             'reviews' => $user->reviews()->with(['film', 'user'])->withCount('comments')->latest()->take(10)->get(),
             'lists' => $user->filmLists()->withCount('films')->latest()->take(10)->get(),
             'suspensionOptions' => self::SUSPENSION_OPTIONS,
+            'sessions' => $sessions->forUser($user),
         ]);
+    }
+
+    /**
+     * End every session the member has and invalidate their "remember me" cookies.
+     */
+    public function signOutEverywhere(User $user, BrowserSessions $sessions): RedirectResponse
+    {
+        $count = $sessions->destroy($user);
+        $sessions->forgetRememberedDevices($user);
+
+        return back()->with('status', "@{$user->username} was signed out of {$count} ".str('session')->plural($count).'.');
     }
 
     public function suspend(Request $request, User $user): RedirectResponse
     {
-        if ($blocked = $this->guard($user)) {
-            return $blocked;
-        }
-
         $data = $request->validate([
             'days' => ['required', 'integer', 'in:'.implode(',', array_keys(self::SUSPENSION_OPTIONS))],
             'reason' => ['nullable', 'string', 'max:500'],
@@ -57,10 +66,6 @@ class AccountController extends Controller
 
     public function ban(Request $request, User $user): RedirectResponse
     {
-        if ($blocked = $this->guard($user)) {
-            return $blocked;
-        }
-
         $data = $request->validate(['reason' => ['nullable', 'string', 'max:500']]);
 
         $user->forceFill([
@@ -95,22 +100,8 @@ class AccountController extends Controller
 
     public function destroy(User $user): RedirectResponse
     {
-        if ($blocked = $this->guard($user)) {
-            return $blocked;
-        }
-
         $user->delete();
 
         return redirect()->route('admin.accounts.index')->with('status', "Account @{$user->username} deleted.");
-    }
-
-    /**
-     * Admin accounts (including your own) can't be suspended, banned or deleted here.
-     */
-    protected function guard(User $user): ?RedirectResponse
-    {
-        return $user->isAdmin()
-            ? back()->with('status', 'Admin accounts cannot be suspended, banned or deleted.')
-            : null;
     }
 }

@@ -3,7 +3,7 @@
         <div class="notice">{{ session('status') }}</div>
     @endif
 
-    <form method="POST" action="{{ route('admin.login.submit') }}">
+    <form method="POST" action="{{ route('admin.login.submit') }}" data-submit-once data-clear-on-back autocomplete="off">
         @csrf
 
         <x-auth-input name="login" label="Admin Username" icon="user"
@@ -16,7 +16,7 @@
             <label><input type="checkbox" name="remember"> Keep me signed in</label>
         </div>
 
-        <button type="submit" class="btn-submit">Access Admin Panel</button>
+        <button type="submit" class="btn-submit" data-loading-text="Signing in…">Access Admin Panel</button>
     </form>
 
     <p class="hint"><a href="{{ route('home') }}" style="margin:0;">← Back to FilmFolio</a></p>

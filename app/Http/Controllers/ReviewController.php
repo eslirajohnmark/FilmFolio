@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Activity;
 use App\Models\Review;
 use App\Models\ReviewComment;
+use App\Notifications\NewReviewComment;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
@@ -32,13 +33,14 @@ class ReviewController extends Controller
     {
         $data = $request->validate(['body' => 'required|string|min:2|max:2000']);
 
-        $review->comments()->create([
+        $comment = $review->comments()->create([
             'user_id' => $request->user()->id,
             'body' => $data['body'],
         ]);
 
         if ($review->user_id !== $request->user()->id) {
             Activity::log($request->user(), 'commented', $review, ['film_title' => $review->film->title]);
+            $review->user->notify(new NewReviewComment($comment));
         }
 
         return redirect()->to(route('reviews.show', $review).'#comments')->with('status', 'Comment posted.');
