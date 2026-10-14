@@ -22,11 +22,35 @@ class RegistrationTest extends TestCase
             'name' => 'Test User',
             'username' => 'test_user',
             'email' => 'test@example.com',
-            'password' => 'password',
-            'password_confirmation' => 'password',
+            'password' => 'John123!',
+            'password_confirmation' => 'John123!',
         ]);
 
         $this->assertAuthenticated();
-        $response->assertRedirect(route('home', absolute: false));
+        $response->assertRedirect(route('home', absolute: false))
+            ->assertSessionHas('status', 'Account created successfully. Welcome to FilmFolio!');
+    }
+
+    public function test_weak_passwords_are_rejected(): void
+    {
+        foreach (['john1245', 'JOHN1245!', 'john1245!', 'Johnjohn!', 'John1245', 'Jo12!'] as $password) {
+            $this->post('/register', [
+                'name' => 'Test User',
+                'username' => 'test_user',
+                'email' => 'test@example.com',
+                'password' => $password,
+                'password_confirmation' => $password,
+            ])->assertSessionHasErrors('password');
+        }
+
+        $this->assertGuest();
+    }
+
+    public function test_registration_form_lists_the_password_rules(): void
+    {
+        $this->get('/register')
+            ->assertSee('data-require-filled', false)
+            ->assertSee('data-password-rules="password"', false)
+            ->assertSeeInOrder(['At least 8 characters', 'One uppercase letter', 'One lowercase letter', 'One number', 'One special character']);
     }
 }

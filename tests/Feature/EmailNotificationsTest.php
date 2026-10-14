@@ -27,8 +27,8 @@ class EmailNotificationsTest extends TestCase
             'name' => 'New Member',
             'username' => 'newmember',
             'email' => 'new@example.com',
-            'password' => 'password',
-            'password_confirmation' => 'password',
+            'password' => 'John123!',
+            'password_confirmation' => 'John123!',
         ]);
 
         Notification::assertSentTo(User::where('username', 'newmember')->sole(), WelcomeToFilmFolio::class);

@@ -1,9 +1,6 @@
 <x-guest-layout heading="Welcome Back" subheading="Login to your account">
-    @if (session('status'))
-        <div class="notice">{{ session('status') }}</div>
-    @endif
 
-    <form method="POST" action="{{ route('login') }}" data-submit-once data-clear-on-back autocomplete="off">
+    <form method="POST" action="{{ route('login') }}" data-submit-once data-require-filled data-clear-on-back autocomplete="off">
         @csrf
 
         <x-auth-input name="login" label="Username" icon="mail"

@@ -154,6 +154,36 @@ body.auth-page { background: #0b0810; }
     margin-top: 6px;
 }
 
+/* A required field the user touched and left empty (or an invalid email) turns red */
+.auth-input input:user-invalid { border-color: var(--accent-red-bright); }
+.auth-card .field:has(input:user-invalid:placeholder-shown)::after {
+    content: 'This field is required.';
+    display: block;
+    color: var(--accent-red-bright);
+    font-size: 12px;
+    margin-top: 6px;
+}
+
+/* Live password checklist (register): red until each rule is met, then green */
+.password-rules {
+    list-style: none;
+    margin: -6px 0 16px;
+    padding: 10px 12px;
+    border-radius: var(--radius-md);
+    background: rgba(225, 29, 72, 0.08);
+    border: 1px solid rgba(244, 63, 94, 0.35);
+    font-size: 12px;
+    line-height: 1.7;
+}
+.password-rules li { color: var(--accent-red-bright); }
+.password-rules li::before { content: '✕ '; }
+.password-rules li.met { color: #86efac; }
+.password-rules li.met::before { content: '✓ '; }
+.password-rules:not(:has(li:not(.met))) {
+    background: rgba(34, 197, 94, 0.1);
+    border-color: rgba(34, 197, 94, 0.45);
+}
+
 .auth-row {
     display: flex;
     align-items: center;
@@ -198,6 +228,18 @@ body.auth-page { background: #0b0810; }
 .auth-card .btn-submit:hover:not(:disabled) {
     background: #7c4def;
     box-shadow: var(--shadow-purple);
+}
+/* Login / register: blue once every required field is filled, gray and unclickable until then */
+form[data-require-filled] .btn-submit { background: var(--accent-sky); }
+form[data-require-filled] .btn-submit:hover:not(:disabled) {
+    background: var(--accent-sky-dark);
+    box-shadow: 0 12px 40px rgba(14, 165, 233, 0.3);
+}
+form[data-require-filled]:not([data-submitted]) .btn-submit:disabled {
+    background: #4b4658;
+    color: #a39db0;
+    opacity: 1;
+    cursor: not-allowed;
 }
 .auth-card.admin .btn-submit { background: var(--accent-red); }
 .auth-card.admin .btn-submit:hover { background: var(--accent-red-bright); box-shadow: var(--shadow-red); }

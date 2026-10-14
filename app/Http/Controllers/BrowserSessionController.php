@@ -20,7 +20,7 @@ class BrowserSessionController extends Controller
     public function destroy(Request $request, string $session): RedirectResponse
     {
         if ($session === $request->session()->getId()) {
-            return back()->with('status', 'Use "Sign out" in the account menu to end this session.');
+            return back()->with('error', 'Use "Sign out" in the account menu to end this session.');
         }
 
         $removed = $this->sessions->destroy($request->user(), sessionId: $session);
@@ -29,7 +29,9 @@ class BrowserSessionController extends Controller
             $this->sessions->forgetRememberedDevices($request->user());
         }
 
-        return back()->with('status', $removed ? 'That device has been signed out.' : 'That session had already ended.');
+        return $removed
+            ? back()->with('status', 'That device has been signed out.')
+            : back()->with('error', 'That session had already ended.');
     }
 
     /**

@@ -77,7 +77,7 @@ class ListController extends Controller
     public function toggleFeatured(FilmList $list): RedirectResponse
     {
         if ($list->visibility !== 'public' && ! $list->is_featured) {
-            return back()->with('status', 'Only public lists can be featured.');
+            return back()->with('error', 'Only public lists can be featured.');
         }
 
         $list->forceFill(['is_featured' => ! $list->is_featured])->save();

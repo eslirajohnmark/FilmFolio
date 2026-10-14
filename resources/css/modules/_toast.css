@@ -1,30 +1,70 @@
 /* ============================================================
    Toast Notifications
+   Top-right stack; green = success, red = error. Gone after 4s or on click.
    ============================================================ */
 
-.toast {
+.toasts {
     position: fixed;
-    bottom: 24px;
-    left: 50%;
-    transform: translateX(-50%);
-    background: var(--bg-elevated);
-    border-left: 4px solid var(--accent-purple);
-    color: #fff;
-    padding: 14px 22px;
-    border-radius: var(--radius-md);
+    top: 84px;
+    right: 24px;
     z-index: 9999;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    width: min(360px, calc(100vw - 32px));
+    pointer-events: none;
+}
+
+.toast {
+    position: relative;
+    overflow: hidden;
+    background: var(--bg-elevated);
+    border-left: 4px solid var(--accent-green);
+    color: #fff;
+    padding: 14px 18px 16px;
+    border-radius: var(--radius-md);
     font-size: 14px;
     font-weight: 500;
     box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5);
-    animation: slideUp 0.25s ease-out;
+    cursor: pointer;
+    pointer-events: auto;
+    animation: toastIn 0.25s ease-out;
 }
 
-.toast.success { border-left-color: var(--accent-purple); }
-.toast.error   { border-left-color: var(--accent-red); }
+/* The coloured line along the bottom shrinks away over the toast's 4 seconds */
+.toast::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    height: 3px;
+    width: 100%;
+    background: var(--accent-green);
+    transform-origin: left;
+    animation: toastTimer 4s linear forwards;
+}
 
-@keyframes slideUp {
-    from { transform: translateX(-50%) translateY(20px); opacity: 0; }
-    to   { transform: translateX(-50%) translateY(0);    opacity: 1; }
+.toast.error         { border-left-color: var(--accent-red-bright); }
+.toast.error::after  { background: var(--accent-red-bright); }
+
+.toast.leaving { opacity: 0; transform: translateX(24px); transition: opacity 0.2s, transform 0.2s; }
+
+@keyframes toastIn {
+    from { transform: translateX(24px); opacity: 0; }
+    to   { transform: translateX(0);    opacity: 1; }
+}
+
+@keyframes toastTimer {
+    to { transform: scaleX(0); }
+}
+
+@media (max-width: 600px) {
+    .toasts { top: 16px; right: 16px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .toast, .toast::after { animation: none; }
+    .toast.leaving { transition: none; }
 }
 
 /* Livewire loading bar */
