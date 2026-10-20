@@ -28,7 +28,8 @@ class AuthenticatedSessionController extends Controller
 
         $request->session()->regenerate();
 
-        return redirect()->intended(route('home', absolute: false));
+        return redirect()->intended(route('home', absolute: false))
+            ->with('banner', ['type' => 'success', 'message' => 'Login Successful']);
     }
 
     /**

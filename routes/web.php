@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Admin\AccountController as AdminAccountController;
+use App\Http\Controllers\Admin\ActivityController as AdminActivityController;
 use App\Http\Controllers\Admin\Auth\AdminLoginController;
 use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
 use App\Http\Controllers\Admin\FilmController as AdminFilmController;
@@ -20,9 +21,16 @@ use App\Http\Controllers\TagController;
 use App\Http\Controllers\TeaserController;
 use App\Http\Controllers\WatchlistController;
 use App\Models\Admin;
+use App\Services\LiveUpdates;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
+
+// Open pages check this every few seconds and refresh their content when it changes
+// (see partials/scripts). It also keeps a signed-in member's "last seen" current.
+Route::get('/live', fn (LiveUpdates $live) => response()
+    ->json(['version' => $live->version()])
+    ->header('Cache-Control', 'no-store'))->name('live');
 
 Route::get('/search', [SearchController::class, 'index'])->middleware('throttle:search')->name('search');
 
@@ -75,6 +83,7 @@ Route::middleware('auth')->group(function () {
 
 Route::middleware('admin')->prefix('admin')->name('admin.')->group(function () {
     Route::get('/', [AdminDashboardController::class, 'index'])->name('dashboard');
+    Route::get('/activity', [AdminActivityController::class, 'index'])->name('activity.index');
 
     Route::post('/films/import', [AdminFilmController::class, 'import'])->name('films.import');
     Route::patch('/films/{film}/teaser', [AdminFilmController::class, 'toggleTeaser'])->name('films.teaser');

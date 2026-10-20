@@ -32,8 +32,8 @@ class AccountSecurityTest extends TestCase
             'name' => 'Sneaky',
             'username' => 'sneaky',
             'email' => 'sneaky@example.com',
-            'password' => 'password',
-            'password_confirmation' => 'password',
+            'password' => 'Password1!',
+            'password_confirmation' => 'Password1!',
             'role' => 'admin',
         ]);
 

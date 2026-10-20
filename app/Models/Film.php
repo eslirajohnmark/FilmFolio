@@ -84,6 +84,15 @@ class Film extends Model
     }
 
     /**
+     * What a poster card shows: how many members watched and liked the film, and its
+     * average rating. Load it with the films so a page of cards doesn't query per card.
+     */
+    public function scopeWithCardStats(Builder $query): Builder
+    {
+        return $query->withCount(['watchers', 'likers'])->withAvg('reviews', 'rating');
+    }
+
+    /**
      * Order by how many members logged or rated the film in the last week.
      */
     public function scopePopularThisWeek(Builder $query): Builder

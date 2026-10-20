@@ -1,0 +1,30 @@
+# Use a MySQL server running on this machine (e.g. Laragon or a MySQL Windows service)
+# instead of the bundled mysql container, so Docker and the local site share one database.
+#
+# Turn it on by adding this line to .env (use ":" instead of ";" on macOS/Linux):
+#   COMPOSE_FILE="docker-compose.yml;docker-compose.host-db.yml"
+#
+# The connection comes from DB_PORT, DB_DATABASE, DB_USERNAME and DB_PASSWORD in .env;
+# only the host changes, because 127.0.0.1 inside a container is the container itself.
+
+x-host-db-env: &host-db-env
+  DB_HOST: ${DOCKER_DB_HOST:-host.docker.internal}
+  DB_PORT: ${DB_PORT:-3306}
+  DB_DATABASE: ${DB_DATABASE:-filmfolio}
+  DB_USERNAME: ${DB_USERNAME:-root}
+  DB_PASSWORD: ${DB_PASSWORD:-}
+
+services:
+  app:
+    environment: *host-db-env
+    depends_on: !reset {}
+
+  queue:
+    environment: *host-db-env
+
+  scheduler:
+    environment: *host-db-env
+
+  # Not started unless asked for with --profile bundled-db
+  mysql:
+    profiles: ["bundled-db"]

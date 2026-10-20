@@ -29,8 +29,13 @@
                     <div class="poster" @if($movie['poster']) style="background-image:url('{{ $movie['poster'] }}')" @endif>
                         @unless($movie['poster'])@include('partials.poster-placeholder')@endunless
                     </div>
-                    <div class="title">{{ $movie['title'] }}</div>
-                    <div class="year">{{ $movie['year'] ?? 'TBA' }} · from TMDB</div>
+                    <div class="card-head">
+                        <span class="card-title">{{ $movie['title'] }}</span>
+                        <span class="card-year">{{ $movie['year'] ?? 'TBA' }}</span>
+                    </div>
+                    <div class="card-stats">
+                        <span class="card-chip">+ Add from TMDB</span>
+                    </div>
                 </a>
             @endforeach
         </div>

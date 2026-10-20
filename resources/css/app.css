@@ -24,6 +24,9 @@
 @import './modules/_toast.css';
 @import './modules/_utilities.css';
 @import './modules/_pages.css';
+@import './modules/_tab-bar.css';
+@import './modules/_intro.css';
+@import './modules/_home-theme.css';
 @import './modules/_responsive.css'; /* must be last of the modules */
 
 /* Tailwind: only used by the Breeze auth/settings views and pagination links.

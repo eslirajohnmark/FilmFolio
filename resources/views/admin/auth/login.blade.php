@@ -1,9 +1,10 @@
-<x-guest-layout heading="Admin Sign In" subheading="Administrator access only" :admin="true">
+<x-guest-layout heading="Admin Sign In" subheading="Administrator access only" :admin="true"
+                :error-banner="$errors->first('login') ?: 'Invalid Credentials'">
     @if (session('status'))
         <div class="notice">{{ session('status') }}</div>
     @endif
 
-    <form method="POST" action="{{ route('admin.login.submit') }}" data-submit-once data-clear-on-back autocomplete="off">
+    <form method="POST" action="{{ route('admin.login.submit') }}" data-submit-once data-clear-on-back data-require-filled autocomplete="off">
         @csrf
 
         <x-auth-input name="login" label="Admin Username" icon="user"

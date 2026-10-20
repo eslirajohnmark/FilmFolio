@@ -1,0 +1,226 @@
+/* ============================================================
+   Home page opening (partials/intro), about 12 seconds:
+
+   0.0 – 3.0s   film-leader countdown, one second per number: 3 · 2 · 1
+   3.1 – 5.7s   "Welcome to / FilmFolio / Your Life in Film", a projector beam crosses it
+   5.7 – 6.0s   the message fades
+   6.0 – 6.8s   the curtains part
+   6.9s         overlay gone (CSS alone ends it, so the page is never left covered)
+   6.3 – 11.3s  headline letters fly in from all over the screen (see .scatter-char)
+   10.4 – 11.5s the rest of the hero rises in (.hero-reveal in _hero.css)
+
+   Every animation names itself in its shorthand: a nameless shorthand plus a separate
+   animation-name gets minified to "animation: none".
+   ============================================================ */
+
+/* When things start. Outside the intro (other pages, reduced motion) everything shows at once. */
+:root {
+    --letters-start: 0.05s;
+    --hero-delay: 0.05s;
+}
+.intro-on   { --letters-start: 6.3s; --hero-delay: 10.4s; }
+.intro-skip { --letters-start: 0.1s; --hero-delay: 1.5s; }
+
+.intro {
+    position: fixed;
+    inset: 0;
+    z-index: 10000;
+    display: grid;
+    place-items: center;
+    overflow: hidden;
+    cursor: pointer;
+    animation: intro-done 0.01s linear 6.9s forwards;
+}
+.intro-skip .intro { animation: intro-skip 0.35s ease forwards; }
+
+@media (prefers-reduced-motion: reduce) {
+    .intro { display: none; }
+}
+
+/* Curtains: each covers half the screen, then slides off its side */
+.intro-curtain {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 50.5%;
+    background:
+        repeating-linear-gradient(90deg, rgba(0, 0, 0, 0.22) 0 2px, transparent 2px 46px),
+        #07050b;
+}
+.intro-curtain.left {
+    left: 0;
+    box-shadow: inset -80px 0 120px -40px rgba(59, 130, 246, 0.45), inset -2px 0 0 rgba(139, 92, 246, 0.6);
+    animation: curtain-left 0.8s cubic-bezier(0.7, 0, 0.2, 1) 6s forwards;
+}
+.intro-curtain.right {
+    right: 0;
+    box-shadow: inset 80px 0 120px -40px rgba(239, 68, 68, 0.4), inset 2px 0 0 rgba(139, 92, 246, 0.6);
+    animation: curtain-right 0.8s cubic-bezier(0.7, 0, 0.2, 1) 6s forwards;
+}
+
+.intro-stage {
+    position: relative;
+    display: grid;
+    place-items: center;
+    animation: stage-out 0.3s ease 5.7s forwards;
+}
+
+/* Film leader: a ring sweeping blue, violet and red behind 3 · 2 · 1 */
+.intro-leader {
+    position: relative;
+    grid-area: 1 / 1;
+    width: 190px;
+    height: 190px;
+    display: grid;
+    place-items: center;
+    animation: leader-out 0.3s ease 3s forwards;
+}
+.intro-ring {
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    background: conic-gradient(from 0deg, var(--trio-blue), var(--trio-violet), var(--trio-red), var(--trio-blue));
+    -webkit-mask: radial-gradient(circle, transparent 62%, #000 63%, #000 68%, transparent 69%);
+    mask: radial-gradient(circle, transparent 62%, #000 63%, #000 68%, transparent 69%);
+    animation: ring-spin 1s linear 3;
+}
+.intro-cross {
+    position: absolute;
+    inset: 12%;
+    background:
+        linear-gradient(rgba(255, 255, 255, 0.12), rgba(255, 255, 255, 0.12)) center / 1px 100% no-repeat,
+        linear-gradient(rgba(255, 255, 255, 0.12), rgba(255, 255, 255, 0.12)) center / 100% 1px no-repeat;
+    border-radius: 50%;
+}
+.intro-count { position: relative; display: grid; }
+.intro-count b {
+    grid-area: 1 / 1;
+    font-family: var(--font-display);
+    font-size: 96px;
+    font-weight: 800;
+    line-height: 1;
+    color: #fff;
+    opacity: 0;
+    text-shadow: 0 0 30px rgba(139, 92, 246, 0.7);
+    animation: count-flash 1s steps(1, end) forwards;
+}
+.intro-count b:nth-child(2) { animation-delay: 1s; }
+.intro-count b:nth-child(3) { animation-delay: 2s; }
+
+/* "Welcome to FilmFolio · Your Life in Film" */
+.intro-message {
+    grid-area: 1 / 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    color: #fff;
+}
+.intro-welcome {
+    font-family: var(--font-display);
+    font-style: italic;
+    font-size: 30px;
+    color: #c7d2fe;
+    opacity: 0;
+    animation: rise-in 0.6s cubic-bezier(0.2, 0.8, 0.2, 1) 3.1s forwards;
+}
+.intro-title {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-top: 10px;
+    padding: 8px 16px;
+    overflow: hidden;
+    opacity: 0;
+    transform: scale(0.85);
+    animation: title-in 0.6s cubic-bezier(0.2, 0.8, 0.2, 1) 3.5s forwards;
+}
+.intro-title .brand-logo {
+    width: 68px;
+    height: 68px;
+    border-radius: 18px;
+    background: var(--grad-trio);
+    box-shadow: 0 0 40px rgba(139, 92, 246, 0.65), 0 0 90px rgba(59, 130, 246, 0.35);
+}
+.intro-title .brand-letter { font-size: 32px; }
+.intro-title .brand-text { font-size: 52px; }
+.intro-beam {
+    position: absolute;
+    top: -20%;
+    bottom: -20%;
+    left: -40%;
+    width: 30%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.55), transparent);
+    transform: skewX(-20deg);
+    animation: beam-sweep 0.8s ease-in-out 4.1s forwards;
+}
+.intro-tagline {
+    margin-top: 16px;
+    font-family: var(--font-mono);
+    font-size: 14px;
+    letter-spacing: 0.35em;
+    text-transform: uppercase;
+    background: var(--grad-trio);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    opacity: 0;
+    animation: rise-in 0.6s ease 4.4s forwards;
+}
+.intro-skip-hint {
+    position: absolute;
+    right: 20px;
+    bottom: calc(18px + env(safe-area-inset-bottom, 0px));
+    font-size: 11px;
+    color: rgba(255, 255, 255, 0.35);
+    letter-spacing: 0.08em;
+}
+
+/* ---- The headline letters: each starts somewhere on the screen and flies to its place ---- */
+.scatter-word { display: inline-block; white-space: nowrap; }
+.scatter-char {
+    display: inline-block;
+    animation: letter-home 2.4s cubic-bezier(0.16, 1, 0.3, 1) both;
+    animation-delay: calc(var(--letters-start) + var(--d, 0s));
+}
+/* Skipped: start again from the scattered positions, but quicker */
+.intro-skip .scatter-char {
+    animation: letter-home-quick 1.4s cubic-bezier(0.16, 1, 0.3, 1) both;
+    animation-delay: calc(var(--letters-start) + var(--d, 0s) * 0.35);
+}
+/* Gradient lines: the letters carry the colours themselves (set per letter by the script) */
+.landing-line.is-scattered { background: none; color: inherit; }
+
+@keyframes intro-done    { to { opacity: 0; visibility: hidden; } }
+@keyframes intro-skip    { to { opacity: 0; visibility: hidden; } }
+@keyframes curtain-left  { to { transform: translateX(-102%); } }
+@keyframes curtain-right { to { transform: translateX(102%); } }
+@keyframes stage-out     { to { opacity: 0; transform: scale(1.06); } }
+@keyframes leader-out    { to { opacity: 0; transform: scale(0.8); } }
+@keyframes ring-spin     { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+@keyframes count-flash   { 0% { opacity: 1; } 100% { opacity: 0; } }
+@keyframes rise-in       { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: none; } }
+@keyframes title-in      { to { opacity: 1; transform: scale(1); } }
+@keyframes beam-sweep    { to { left: 120%; } }
+@keyframes letter-home {
+    from { opacity: 0; transform: translate(var(--x), var(--y)) rotate(var(--r)) scale(var(--s)); }
+    30%  { opacity: 1; }
+    to   { opacity: 1; transform: none; }
+}
+@keyframes letter-home-quick {
+    from { opacity: 0; transform: translate(var(--x), var(--y)) rotate(var(--r)) scale(var(--s)); }
+    30%  { opacity: 1; }
+    to   { opacity: 1; transform: none; }
+}
+
+@media (max-width: 480px) {
+    .intro-title { gap: 12px; }
+    .intro-title .brand-logo { width: 50px; height: 50px; border-radius: 14px; }
+    .intro-title .brand-letter { font-size: 23px; }
+    .intro-title .brand-text { font-size: 38px; }
+    .intro-welcome { font-size: 24px; }
+    .intro-tagline { font-size: 12px; letter-spacing: 0.28em; }
+    .intro-leader { width: 150px; height: 150px; }
+    .intro-count b { font-size: 76px; }
+}

@@ -36,16 +36,38 @@ class AdminListsTest extends TestCase
         $this->assertSame(['Best Horror', 'Worse Horror'], $list->films()->orderBy('list_items.position')->pluck('title')->all());
     }
 
-    public function test_admins_can_feature_and_delete_lists(): void
+    public function test_admins_can_feature_and_delete_crew_picks(): void
     {
         $admin = Admin::factory()->create();
+        $crewPick = new FilmList(['name' => 'Essential Noir', 'visibility' => 'public']);
+        $crewPick->forceFill(['admin_id' => $admin->id, 'is_official' => true])->save();
+
+        $this->actingAsAdmin($admin)->patch(route('admin.lists.feature', $crewPick));
+        $this->assertTrue($crewPick->fresh()->is_featured);
+
+        $this->actingAsAdmin($admin)->delete(route('admin.lists.destroy', $crewPick));
+        $this->assertModelMissing($crewPick);
+    }
+
+    public function test_admins_can_feature_a_members_list_but_not_delete_it(): void
+    {
         $list = FilmList::create(['user_id' => User::factory()->create()->id, 'name' => 'Member List', 'visibility' => 'public']);
 
-        $this->actingAsAdmin($admin)->patch(route('admin.lists.feature', $list));
-        $this->assertTrue($list->fresh()->is_featured);
+        $this->actingAsAdmin()->patch(route('admin.lists.feature', $list));
+        $this->actingAsAdmin()->delete(route('admin.lists.destroy', $list))->assertForbidden();
 
-        $this->actingAsAdmin($admin)->delete(route('admin.lists.destroy', $list));
-        $this->assertModelMissing($list);
+        $this->assertModelExists($list);
+        $this->assertTrue($list->fresh()->is_featured);
+    }
+
+    public function test_members_lists_have_no_delete_button_in_the_admin_list_table(): void
+    {
+        $list = FilmList::create(['user_id' => User::factory()->create()->id, 'name' => 'Member List', 'visibility' => 'public']);
+
+        $response = $this->actingAsAdmin()->get(route('admin.lists.index'));
+
+        $response->assertSee('action="'.route('admin.lists.feature', $list).'"', false)
+            ->assertDontSee('action="'.route('admin.lists.destroy', $list).'"', false);
     }
 
     public function test_private_lists_can_not_be_featured(): void

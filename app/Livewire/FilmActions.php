@@ -92,18 +92,8 @@ class FilmActions extends Component
             return;
         }
 
-        if ($value < 0.5 || $value > 5 || fmod($value * 2, 1.0) !== 0.0) {
+        if (! $user->rateFilm($this->film, $value)) {
             return;
-        }
-
-        $review = Review::updateOrCreate(
-            ['user_id' => $user->id, 'film_id' => $this->film->id],
-            ['rating' => $value],
-        );
-        $user->markWatched($this->film);
-
-        if ($review->wasRecentlyCreated || $review->wasChanged('rating')) {
-            Activity::log($user, 'rated', $this->film, ['rating' => $value]);
         }
 
         $this->refreshState();

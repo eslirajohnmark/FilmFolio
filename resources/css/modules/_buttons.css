@@ -134,6 +134,8 @@
 .icon-btn:hover { transform: scale(1.1); }
 .icon-edit   { background: var(--accent-purple); }
 .icon-delete { background: var(--accent-red); }
+.icon-view   { background: var(--bg-elevated); border: 1px solid var(--border-glow); color: var(--accent-purple-bright); }
+.icon-view svg { width: 14px; height: 14px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
 
 /* Follow button — small outlined pill */
 .btn-follow {

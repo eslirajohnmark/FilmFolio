@@ -10,7 +10,7 @@ class WatchlistController extends Controller
     public function index(Request $request): View
     {
         return view('watchlist.index', [
-            'films' => $request->user()->watchlist()->orderByDesc('watchlists.id')->paginate(24),
+            'films' => $request->user()->watchlist()->orderByDesc('watchlists.id')->withCardStats()->paginate(24),
         ]);
     }
 }

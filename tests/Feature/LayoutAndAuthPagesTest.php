@@ -29,6 +29,21 @@ class LayoutAndAuthPagesTest extends TestCase
         $this->actingAsAdmin($admin)->get('/')->assertSee(json_encode(route('admin.dashboard')), false);
     }
 
+    public function test_admin_pages_have_a_shortcut_back_to_the_member_side(): void
+    {
+        $response = $this->actingAsAdmin()->get(route('admin.dashboard'));
+
+        $response->assertSee("e.ctrlKey && e.shiftKey && e.key.toLowerCase() === 'u'", false)
+            ->assertSee(json_encode(route('home')), false);
+    }
+
+    public function test_member_pages_do_not_have_the_shortcut_back_to_the_member_side(): void
+    {
+        $response = $this->get(route('home'));
+
+        $response->assertDontSee("e.key.toLowerCase() === 'u'", false);
+    }
+
     public function test_guest_home_page_matches_the_landing_design(): void
     {
         Film::factory()->create(['title' => 'Fresh Release']);

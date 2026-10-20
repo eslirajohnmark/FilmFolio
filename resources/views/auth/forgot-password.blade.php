@@ -3,7 +3,7 @@
         <div class="notice">{{ session('status') }}</div>
     @endif
 
-    <form method="POST" action="{{ route('password.email') }}" data-submit-once data-clear-on-back autocomplete="off">
+    <form method="POST" action="{{ route('password.email') }}" data-submit-once data-clear-on-back data-require-filled autocomplete="off">
         @csrf
 
         <x-auth-input name="email" label="Email or Username" icon="mail"

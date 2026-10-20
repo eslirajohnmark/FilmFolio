@@ -33,7 +33,7 @@ class SearchController extends Controller
         }
 
         $like = "%{$q}%";
-        $films = Film::where('title', 'like', $like)->orderByDesc('year')->take(24)->get();
+        $films = Film::where('title', 'like', $like)->orderByDesc('year')->withCardStats()->take(24)->get();
 
         $recommendations->recordSearch($q, $films);
 

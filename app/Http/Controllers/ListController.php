@@ -34,7 +34,7 @@ class ListController extends Controller
     {
         Gate::authorize('view', $list);
 
-        $films = $list->films()->orderBy('list_items.position')->get();
+        $films = $list->films()->orderBy('list_items.position')->withCardStats()->get();
 
         return view('lists.show', [
             'list' => $list->load('user')->loadCount('likes'),

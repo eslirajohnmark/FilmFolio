@@ -30,7 +30,7 @@
     <div class="poster-grid" wire:loading.class="is-loading">
         @forelse($films as $film)
             <div wire:key="film-{{ $film->id }}">
-                @include('partials.poster-card', ['film' => $film, 'rating' => $film->reviews_avg_rating])
+                @include('partials.poster-card', ['film' => $film])
             </div>
         @empty
             <p class="empty-state" style="grid-column:1 / -1;">

@@ -29,13 +29,13 @@ class HomeController extends Controller
         return view('home', [
             'user' => $user,
             'suggestions' => $recommendations->suggestionsFor(limit: 5),
-            'friendsWatching' => DiaryEntry::with(['film', 'user'])
+            'friendsWatching' => DiaryEntry::with(['film' => fn ($query) => $query->withCardStats(), 'user'])
                 ->whereIn('user_id', $followingIds)
                 ->latest('watched_on')
                 ->latest('id')
                 ->take(5)
                 ->get(),
-            'popularFilms' => Film::popularThisWeek()->withAvg('reviews', 'rating')->take(5)->get(),
+            'popularFilms' => Film::popularThisWeek()->withCardStats()->take(5)->get(),
             'feed' => Activity::with(['user', 'subject'])
                 ->visibleInFeeds()
                 ->whereIn('user_id', $followingIds->push($user->id))
@@ -52,7 +52,7 @@ class HomeController extends Controller
      */
     protected function justReviewed(): Collection
     {
-        $films = Review::with(['film' => fn ($query) => $query->withAvg('reviews', 'rating')])
+        $films = Review::with(['film' => fn ($query) => $query->withCardStats()])
             ->latest()
             ->take(40)
             ->get()
@@ -62,7 +62,7 @@ class HomeController extends Controller
 
         if ($films->count() < 5) {
             $films = $films->concat(
-                Film::whereNotIn('id', $films->pluck('id'))->withAvg('reviews', 'rating')->latest()->take(5 - $films->count())->get()
+                Film::whereNotIn('id', $films->pluck('id'))->withCardStats()->latest()->take(5 - $films->count())->get()
             );
         }
 

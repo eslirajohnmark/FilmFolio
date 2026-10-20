@@ -85,8 +85,13 @@ class ListController extends Controller
         return back()->with('status', $list->is_featured ? "\"{$list->name}\" is now featured." : "\"{$list->name}\" is no longer featured.");
     }
 
+    /**
+     * Crew Picks only: admins can feature a member's list, but never delete it.
+     */
     public function destroy(FilmList $list): RedirectResponse
     {
+        abort_unless($list->isCrewPick(), 403, "Members' lists can't be deleted by admins.");
+
         $list->delete();
 
         return back()->with('status', "List \"{$list->name}\" deleted.");

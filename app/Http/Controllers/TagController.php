@@ -10,7 +10,7 @@ class TagController extends Controller
     {
         return view('tags.show', [
             'tag' => $tag,
-            'films' => $tag->films()->paginate(24),
+            'films' => $tag->films()->withCardStats()->paginate(24),
             'diaries' => $tag->diaries()
                 ->with('user', 'film')
                 ->latest()

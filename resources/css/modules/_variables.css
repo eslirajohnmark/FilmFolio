@@ -53,6 +53,12 @@
     --grad-purple: linear-gradient(135deg, #a855f7 0%, #9333ea 100%);
     --grad-poster: linear-gradient(180deg, #9333ea 0%, #5b21b6 100%);
     --grad-red:    linear-gradient(135deg, #e11d48 0%, #f43f5e 100%);
+
+    /* Landing page + opening animation: the blue / violet / red trio */
+    --trio-blue:    #3b82f6;
+    --trio-violet:  #8b5cf6;
+    --trio-red:     #ef4444;
+    --grad-trio:    linear-gradient(90deg, #3b82f6 0%, #8b5cf6 50%, #ef4444 100%);
     --grad-nav:    var(--bg-deep);
     --grad-page:   radial-gradient(ellipse 70% 520px at 50% 0%, rgba(88, 28, 135, 0.28), transparent 75%);
 

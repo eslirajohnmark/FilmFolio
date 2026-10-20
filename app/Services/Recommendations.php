@@ -186,8 +186,7 @@ class Recommendations
         $films = Film::query()
             ->whereIn('genre', $topGenres)
             ->whereNotIn('id', $seen)
-            ->withAvg('reviews', 'rating')
-            ->withCount('watchers')
+            ->withCardStats()
             ->get()
             ->sortByDesc(fn (Film $film) => [
                 $scores[$film->genre] ?? 0,
@@ -219,6 +218,11 @@ class Recommendations
 
     protected function record(string $genre, string $source, int $weight, ?string $term = null): void
     {
+        // A page refreshing itself in place isn't the member viewing or searching again.
+        if (LiveUpdates::isRefresh()) {
+            return;
+        }
+
         [$user, $sessionKey] = $this->owner();
 
         if (! $user && ! $sessionKey) {

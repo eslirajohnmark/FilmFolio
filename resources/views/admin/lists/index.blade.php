@@ -6,7 +6,7 @@
 <div class="admin-toolbar">
     <div>
         <h1 class="section-title" style="margin:0;">Lists</h1>
-        <p class="panel-sub" style="margin:4px 0 0;">Create official lists, feature great ones, remove inappropriate ones.</p>
+        <p class="panel-sub" style="margin:4px 0 0;">Create Crew Picks and feature great lists. Members' own lists can be viewed and featured, never edited or deleted.</p>
     </div>
     <a href="{{ route('admin.lists.create') }}" class="btn btn-primary">+ New official list</a>
 </div>
@@ -67,13 +67,19 @@
                     </td>
                     <td>
                         <div class="row-actions">
-                            <a href="{{ route('lists.show', $list) }}#edit" class="icon-btn icon-edit" title="Edit">✎</a>
-                            <form method="POST" action="{{ route('admin.lists.destroy', $list) }}"
-                                  onsubmit="return confirm(@js('Delete the list “'.$list->name.'”?'))">
-                                @csrf
-                                @method('DELETE')
-                                <button class="icon-btn icon-delete" title="Delete">🗑</button>
-                            </form>
+                            <a href="{{ route('lists.show', $list) }}" class="icon-btn icon-view" title="View list" aria-label="View {{ $list->name }}">
+                                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M1.5 12S5.5 5 12 5s10.5 7 10.5 7-4 7-10.5 7S1.5 12 1.5 12z"/><circle cx="12" cy="12" r="3"/></svg>
+                            </a>
+                            @if($list->isCrewPick())
+                                <form method="POST" action="{{ route('admin.lists.destroy', $list) }}"
+                                      onsubmit="return confirm(@js('Delete the list “'.$list->name.'”?'))">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button class="icon-btn icon-delete" title="Delete">🗑</button>
+                                </form>
+                            @else
+                                <span class="text-muted view-only" title="This list belongs to a member: it can be featured, but not edited or deleted">Member's list</span>
+                            @endif
                         </div>
                     </td>
                 </tr>

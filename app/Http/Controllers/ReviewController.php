@@ -15,7 +15,7 @@ class ReviewController extends Controller
 {
     public function show(Review $review): View
     {
-        $review->load(['user', 'film', 'comments.user'])->loadCount('comments');
+        $review->load(['user', 'film' => fn ($query) => $query->withCardStats(), 'comments.user'])->loadCount('comments');
 
         return view('reviews.show', [
             'review' => $review,

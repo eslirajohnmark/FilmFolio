@@ -9,11 +9,13 @@ class GuestLayout extends Component
 {
     /**
      * Auth pages render as a card over the blurred cinema background.
+     * $errorBanner is shown in a red banner whenever the form comes back with errors.
      */
     public function __construct(
         public string $heading = 'Welcome',
         public ?string $subheading = null,
         public bool $admin = false,
+        public ?string $errorBanner = 'Please fix the highlighted fields.',
     ) {}
 
     /**

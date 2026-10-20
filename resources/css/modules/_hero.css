@@ -24,28 +24,250 @@
     padding: 60px var(--container-pad);
 }
 
-/* Guest landing hero */
+/* ---- Home page heroes (guest landing + member welcome): blue / violet / red stage lights ----
+   Timings (--hero-delay, --letters-start) live in _intro.css with the opening animation. */
+.home-hero { isolation: isolate; }
 .landing-hero {
-    min-height: 500px;
+    min-height: 600px;
     display: grid;
     place-items: center;
     text-align: center;
 }
+
+/* Three soft lights drifting behind the text */
+.landing-glow { position: absolute; inset: 0; z-index: -1; pointer-events: none; overflow: hidden; }
+.landing-glow span {
+    position: absolute;
+    width: min(620px, 60vw);
+    aspect-ratio: 1;
+    border-radius: 50%;
+    animation: glow-drift 16s ease-in-out infinite alternate;
+}
+.landing-glow .glow-blue   { top: -12%; left: 4%;   background: radial-gradient(circle, rgba(59, 130, 246, 0.38), transparent 65%); }
+.landing-glow .glow-violet { top: 18%;  left: 30%;  background: radial-gradient(circle, rgba(139, 92, 246, 0.42), transparent 65%); animation-delay: -5s; }
+.landing-glow .glow-red    { top: -6%;  right: 2%;  background: radial-gradient(circle, rgba(239, 68, 68, 0.32), transparent 65%); animation-delay: -10s; }
+/* A faint projector beam from the top */
+.home-hero::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background: conic-gradient(from 180deg at 50% -8%, transparent 160deg, rgba(255, 255, 255, 0.045) 174deg, rgba(255, 255, 255, 0.07) 180deg, rgba(255, 255, 255, 0.045) 186deg, transparent 200deg);
+    pointer-events: none;
+}
+
+.landing-eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 26px;
+    padding: 6px 14px;
+    border: 1px solid rgba(139, 92, 246, 0.45);
+    border-radius: var(--radius-pill);
+    background: rgba(139, 92, 246, 0.1);
+    font-family: var(--font-mono);
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: #ddd6fe;
+}
+.landing-eyebrow i { width: 7px; height: 7px; border-radius: 50%; background: var(--grad-trio); box-shadow: 0 0 10px rgba(139, 92, 246, 0.9); }
+
 .landing-hero h1 {
     font-family: var(--font-display);
     font-weight: 800;
-    font-size: 52px;
-    line-height: 1.02;
+    font-size: 56px;
+    line-height: 1.05;
     letter-spacing: -0.01em;
     color: #fff;
 }
-.landing-cta { margin-top: 56px; }
+/* One colour per line: watched (blue), want to see (violet), what's good (red).
+   When the letters fly in, the script colours each letter along the same gradient instead. */
+.landing-line {
+    display: block;
+    background-clip: text;
+    -webkit-background-clip: text;
+    color: transparent;
+    padding-bottom: 0.04em;
+}
+.landing-line.line-blue   { background-image: linear-gradient(90deg, #bfdbfe, #60a5fa 55%, #3b82f6); }
+.landing-line.line-violet { background-image: linear-gradient(90deg, #ddd6fe, #a78bfa 55%, #8b5cf6); }
+.landing-line.line-red    { background-image: linear-gradient(90deg, #fecaca, #f87171 55%, #ef4444); }
+
+.landing-cta {
+    margin-top: 44px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 14px;
+}
+.landing-cta .btn-trio {
+    background: linear-gradient(90deg, var(--trio-blue), var(--trio-violet), var(--trio-red), var(--trio-violet), var(--trio-blue));
+    background-size: 300% 100%;
+    border-radius: var(--radius-pill);
+    padding: 14px 30px;
+    box-shadow: 0 10px 34px rgba(139, 92, 246, 0.45);
+    animation: trio-shift 8s linear infinite;
+}
+.landing-cta .btn-trio:hover { background: linear-gradient(90deg, var(--trio-blue), var(--trio-violet), var(--trio-red), var(--trio-violet), var(--trio-blue)); background-size: 300% 100%; box-shadow: 0 14px 40px rgba(239, 68, 68, 0.4); transform: translateY(-2px); }
+.btn-ghost-trio {
+    display: inline-block;
+    padding: 13px 26px;
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    border-radius: var(--radius-pill);
+    background: rgba(255, 255, 255, 0.04);
+    color: #fff;
+    font-weight: 700;
+    font-size: 15px;
+    transition: border-color var(--t-fast), background var(--t-fast), transform var(--t-fast);
+}
+.btn-ghost-trio:hover { border-color: var(--trio-violet); background: rgba(139, 92, 246, 0.12); transform: translateY(-2px); }
+
 .landing-hero .tagline {
-    margin-top: 40px;
+    margin-top: 30px;
     font-family: var(--font-body);
     font-size: 14px;
     color: #e6e1ef;
 }
+
+/* ---- Member home: gradient "Welcome back, Name!" and three quick actions ---- */
+.home-hero .welcome { padding-top: 84px; padding-bottom: 56px; }
+.home-page .welcome h1.welcome-back {
+    font-size: 42px;
+    background: linear-gradient(90deg, #93c5fd, #a78bfa 50%, #f87171);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+}
+.home-page .welcome h1.welcome-back a.welcome-name { color: inherit; }
+/* Split into flying letters: the script colours each letter, so drop the clipped gradient */
+.landing-line.is-scattered,
+.home-page .welcome h1.welcome-back.is-scattered { background: none; color: #fff; }
+.home-actions {
+    margin-top: 26px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+}
+.home-action {
+    padding: 9px 18px;
+    border: 1px solid;
+    border-radius: var(--radius-pill);
+    font-size: 13px;
+    font-weight: 700;
+    transition: background var(--t-fast), transform var(--t-fast);
+}
+.home-action:hover { transform: translateY(-2px); }
+.home-action.blue   { border-color: rgba(59, 130, 246, 0.55); color: #93c5fd; background: rgba(59, 130, 246, 0.1); }
+.home-action.violet { border-color: rgba(139, 92, 246, 0.55); color: #c4b5fd; background: rgba(139, 92, 246, 0.1); }
+.home-action.red    { border-color: rgba(239, 68, 68, 0.55);  color: #fca5a5; background: rgba(239, 68, 68, 0.1); }
+.home-action.blue:hover   { background: rgba(59, 130, 246, 0.22); }
+.home-action.violet:hover { background: rgba(139, 92, 246, 0.22); }
+.home-action.red:hover    { background: rgba(239, 68, 68, 0.22); }
+
+/* ---- Guest "how it works": a card per colour ---- */
+.home-features {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 18px;
+    margin-bottom: 44px;
+}
+.home-feature {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding: 24px 22px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    background: var(--bg-surface);
+    overflow: hidden;
+    transition: transform var(--t-base), border-color var(--t-base), box-shadow var(--t-base);
+}
+.home-feature::before {
+    content: "";
+    position: absolute;
+    inset: 0 0 auto;
+    height: 3px;
+    background: var(--feature-color);
+}
+.home-feature:hover { transform: translateY(-3px); border-color: var(--feature-color); box-shadow: 0 14px 36px -12px var(--feature-color); }
+.home-feature.blue   { --feature-color: var(--trio-blue); }
+.home-feature.violet { --feature-color: var(--trio-violet); }
+.home-feature.red    { --feature-color: var(--trio-red); }
+.home-feature b { font-size: 16px; color: #fff; }
+.home-feature > span:last-child { font-size: 13px; line-height: 1.55; color: var(--text-secondary); }
+.home-feature-icon {
+    width: 42px;
+    height: 42px;
+    display: grid;
+    place-items: center;
+    margin-bottom: 4px;
+    border-radius: 12px;
+    color: var(--feature-color);
+    background: color-mix(in srgb, var(--feature-color) 16%, transparent);
+}
+.home-feature-icon svg { width: 22px; height: 22px; fill: none; stroke: currentColor; stroke-width: 1.9; stroke-linecap: round; stroke-linejoin: round; }
+
+/* ---- Home sections: headings and film cards in blue / violet / red ---- */
+.home-page .section-label {
+    position: relative;
+    padding-left: 16px;
+    border-bottom: none;
+}
+.home-page .section-label::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 2px;
+    bottom: 12px;
+    width: 4px;
+    border-radius: 2px;
+    background: linear-gradient(180deg, var(--trio-blue), var(--trio-violet), var(--trio-red));
+}
+.home-page .section-label::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 1px;
+    background: linear-gradient(90deg, rgba(59, 130, 246, 0.6), rgba(139, 92, 246, 0.4) 40%, rgba(239, 68, 68, 0.3) 70%, transparent);
+}
+.home-page .section-label a:hover { color: #c4b5fd; }
+.home-page .poster-card.plate { border-color: rgba(139, 92, 246, 0.55); background: linear-gradient(165deg, #2a3d8f 0%, #4f3a80 45%, #6b2a4a 100%); }
+.home-page .poster-card.plate:hover { border-color: #c4b5fd; box-shadow: 0 14px 34px rgba(59, 130, 246, 0.25), 0 14px 34px rgba(239, 68, 68, 0.2); }
+
+/* Each piece rises in, one after another (after the letters while the intro plays) */
+.hero-reveal {
+    opacity: 0;
+    animation: hero-rise 0.75s cubic-bezier(0.2, 0.7, 0.2, 1) forwards;
+    animation-delay: calc(var(--hero-delay) + var(--i, 0) * 110ms);
+}
+.intro-skip .hero-reveal { animation-name: hero-rise-quick; }
+/* Content swapped in later by live updates shows straight away */
+.intro-done .hero-reveal { opacity: 1; animation: none; }
+
+@keyframes hero-rise       { from { opacity: 0; transform: translateY(18px); } to { opacity: 1; transform: none; } }
+@keyframes hero-rise-quick { from { opacity: 0; transform: translateY(18px); } to { opacity: 1; transform: none; } }
+@keyframes glow-drift { from { transform: translate(0, 0) scale(1); } to { transform: translate(6%, 8%) scale(1.15); } }
+@keyframes trio-shift { to { background-position: 300% 0; } }
+
+@media (max-width: 860px) {
+    .home-features { grid-template-columns: 1fr; gap: 12px; }
+    .home-feature { padding: 18px; }
+}
+@media (max-width: 768px) {
+    .landing-hero { min-height: 520px; }
+    .home-page .welcome h1.welcome-back { font-size: 30px; }
+}
+@media (prefers-reduced-motion: reduce) {
+    .hero-reveal { opacity: 1; animation: none; }
+    .landing-glow span, .landing-cta .btn-trio { animation: none; }
+}
+
 .home-sections { padding-top: 40px; }
 .home-sections > .section-label:first-child { margin-top: 0; }
 
@@ -103,4 +325,20 @@
     margin-top: 8px;
     font-family: var(--font-display);
     color: var(--text-secondary);
+}
+
+/* "Welcome back, Name!" — blue greeting, yellow name (member home + admin dashboard) */
+.welcome-back,
+.welcome h1.welcome-back { color: #60a5fa; }
+.welcome-back .welcome-name,
+.welcome h1 a.welcome-name {
+    color: #facc15;
+    font-family: var(--font-display);
+    font-weight: 700;
+}
+.welcome h1 a.welcome-name:hover { color: #fde047; }
+.admin-welcome {
+    font-family: var(--font-display);
+    font-size: 22px;
+    margin-bottom: 10px;
 }

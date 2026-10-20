@@ -18,8 +18,8 @@ class RateLimitingTest extends TestCase
                 'name' => "Member {$i}",
                 'username' => "member{$i}",
                 'email' => "member{$i}@example.com",
-                'password' => 'password',
-                'password_confirmation' => 'password',
+                'password' => 'Password1!',
+                'password_confirmation' => 'Password1!',
             ]);
             auth()->logout();
         }
@@ -28,8 +28,8 @@ class RateLimitingTest extends TestCase
             'name' => 'One Too Many',
             'username' => 'onetoomany',
             'email' => 'onetoomany@example.com',
-            'password' => 'password',
-            'password_confirmation' => 'password',
+            'password' => 'Password1!',
+            'password_confirmation' => 'Password1!',
         ])->assertTooManyRequests();
 
         $this->assertDatabaseMissing('users', ['username' => 'onetoomany']);

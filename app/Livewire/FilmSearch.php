@@ -69,8 +69,8 @@ class FilmSearch extends Component
                 ->when(ctype_digit(trim($this->q)), fn ($byYear) => $byYear->orWhere('year', (int) trim($this->q)))))
             ->when($this->genre, fn ($query) => $query->where('genre', $this->genre))
             ->when($this->decade, fn ($query) => $query->whereBetween('year', [(int) $this->decade, (int) $this->decade + 9]))
-            ->withCount(['watchers', 'reviews'])
-            ->withAvg('reviews', 'rating')
+            ->withCardStats()
+            ->withCount('reviews')
             ->tap(fn ($query) => match ($this->sort) {
                 'rating' => $query->orderByDesc('reviews_avg_rating')->orderByDesc('reviews_count'),
                 'newest' => $query->orderByDesc('year')->orderByDesc('release_date'),

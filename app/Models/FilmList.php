@@ -41,6 +41,15 @@ class FilmList extends Model
         return $this->user?->username ?? $this->user?->name ?? 'FilmFolio Crew';
     }
 
+    /**
+     * Crew Picks belong to the admins, who can delete them. A member's own list belongs to
+     * that member: admins can view and feature it, but never edit or delete it.
+     */
+    public function isCrewPick(): bool
+    {
+        return (bool) $this->is_official;
+    }
+
     public function films()
     {
         return $this->belongsToMany(Film::class, 'list_items')->withPivot('position');

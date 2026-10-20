@@ -3,7 +3,10 @@
 .env.*
 !.env.example
 storage/app/backups
-docker/mysql
+
+# Uploads are mounted from the host at runtime, not copied into the image
+storage/app/public/*
+!storage/app/public/.gitignore
 
 # Rebuilt inside the image
 vendor

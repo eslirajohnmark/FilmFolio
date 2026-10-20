@@ -36,8 +36,7 @@ class DashboardController extends Controller
             ],
             'periods' => $this->periodStats(),
             'genres' => $this->popularBy('films.genre'),
-            'decades' => $this->popularBy('films.year - (films.year % 10)')
-                ->mapWithKeys(fn ($total, $decade) => [$decade.'s' => $total]),
+            'decades' => $this->popularBy('films.year - (films.year % 10)'),
             'weekly' => $this->weeklyActivity(12),
         ]);
     }
@@ -99,7 +98,7 @@ class DashboardController extends Controller
     /**
      * Reviews + diary logs per week for the last N weeks (oldest first).
      *
-     * @return Collection<int, array{label: string, total: int}>
+     * @return Collection<int, array{start: string, label: string, total: int}>
      */
     protected function weeklyActivity(int $weeks): Collection
     {
@@ -113,6 +112,7 @@ class DashboardController extends Controller
             $to = $from->copy()->addWeek();
 
             return [
+                'start' => $from->toDateString(),
                 'label' => $from->format('M j'),
                 'total' => $dates->filter(fn (Carbon $date) => $date->gte($from) && $date->lt($to))->count(),
             ];

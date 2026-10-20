@@ -7,9 +7,10 @@
 <a href="{{ route('admin.accounts.index') }}" class="link" style="font-size:13px;">← All accounts</a>
 
 <div class="profile-header" style="margin-top:14px;">
-    <img src="{{ $user->avatarUrl() }}" class="profile-avatar" alt="">
+    @livewire('admin.user-presence', ['member' => $user, 'variant' => 'avatar'], key('presence-avatar-'.$user->id))
     <div class="profile-info">
         <h1>{{ $user->name }}</h1>
+        @livewire('admin.user-presence', ['member' => $user], key('presence-badge-'.$user->id))
         <div class="review-author" style="font-size:13px;">&#64;{{ $user->username }} · {{ $user->email }}</div>
         <p class="profile-bio">Joined {{ $user->created_at->format('M d, Y') }}</p>
         <span class="status status-{{ $state === 'active' ? 'active' : ($state === 'banned' ? 'banned' : 'suspended') }}">{{ ucfirst($state) }}</span>
@@ -23,7 +24,7 @@
     </div>
 </div>
 
-<div class="admin-split" style="margin-top:28px;grid-template-columns:minmax(0,1fr) 320px;">
+<div class="admin-split admin-split-wide" style="margin-top:28px;">
     <div>
         <div class="section-label" style="margin-top:0;">Recent activity <a href="{{ route('profile.show', [$user, 'tab' => 'activity']) }}">Public profile ↗</a></div>
         @forelse($activities as $activity)

@@ -1,4 +1,5 @@
-<div>
+{{-- Re-renders every 10 seconds so the online dots and new members stay current --}}
+<div wire:poll.10s>
     <div class="admin-toolbar">
         <div class="search-bar" style="margin:0;flex:1;max-width:420px;">
             <input type="search" placeholder="Search by name, username or email…" wire:model.live.debounce.300ms="q" aria-label="Search members">
@@ -7,6 +8,9 @@
             @foreach($statuses as $key => $label)
                 <button type="button" wire:click="$set('status', '{{ $key }}')" class="{{ $status === $key ? 'active' : '' }}">{{ $label }}</button>
             @endforeach
+            @if($joinedLabel)
+                <button type="button" wire:click="$set('joined', '')" class="active" title="Clear this filter">{{ $joinedLabel }} ✕</button>
+            @endif
         </div>
     </div>
 
@@ -28,10 +32,15 @@
                 @forelse($users as $user)
                     @php $state = $user->accountStatus(); @endphp
                     <tr wire:key="u-{{ $user->id }}">
-                        <td style="width:46px;"><img src="{{ $user->avatarUrl() }}" class="member-avatar" style="width:34px;height:34px;" alt=""></td>
+                        <td style="width:46px;">
+                            <span class="presence-avatar small {{ $user->isOnline() ? 'is-online' : '' }}">
+                                <img src="{{ $user->avatarUrl() }}" class="member-avatar" style="width:34px;height:34px;" alt="">
+                            </span>
+                        </td>
                         <td>
                             <a href="{{ route('admin.accounts.show', $user) }}" style="color:#fff;font-weight:600;">&#64;{{ $user->username ?? $user->name }}</a>
                             <div class="text-muted" style="font-size:12px;">{{ $user->name }}</div>
+                            @include('partials.presence', ['member' => $user])
                         </td>
                         <td>{{ $user->email }}</td>
                         <td>{{ $user->created_at->format('M d, Y') }}</td>

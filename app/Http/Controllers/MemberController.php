@@ -49,8 +49,9 @@ class MemberController extends Controller
 
         if ($tab === 'profile') {
             return view('profile.show', $data + [
-                'favorites' => $user->favoriteFilms()->get(),
-                'recentDiary' => $user->diaryEntries()->with('film')->latest('watched_on')->latest('id')->take(5)->get(),
+                'favorites' => $user->favoriteFilms()->withCardStats()->get(),
+                'recentDiary' => $user->diaryEntries()->with(['film' => fn ($query) => $query->withCardStats()])
+                    ->latest('watched_on')->latest('id')->take(5)->get(),
                 'recentReviews' => $user->reviews()->with(['film', 'user'])->withCount('comments')
                     ->whereNotNull('body')->latest()->take(4)->get(),
             ]);
@@ -58,11 +59,11 @@ class MemberController extends Controller
 
         $items = match ($tab) {
             'activity' => $user->activities()->with(['user', 'subject'])->visibleInFeeds()->latest()->paginate(20),
-            'ratings' => $user->reviews()->with('film')->latest('updated_at')->paginate(30),
-            'films' => $user->watchedFilms()->withAvg('reviews', 'rating')->orderByPivot('updated_at', 'desc')->paginate(30),
+            'ratings' => $user->reviews()->with(['film' => fn ($query) => $query->withCardStats()])->latest('updated_at')->paginate(30),
+            'films' => $user->watchedFilms()->withCardStats()->orderByPivot('updated_at', 'desc')->paginate(30),
             'reviews' => $user->reviews()->with(['film', 'user'])->withCount('comments')->latest()->paginate(12),
-            'watchlist' => $user->watchlist()->orderByDesc('watchlists.id')->paginate(30),
-            'likes' => $user->likedFilms()->orderByPivot('updated_at', 'desc')->paginate(30),
+            'watchlist' => $user->watchlist()->orderByDesc('watchlists.id')->withCardStats()->paginate(30),
+            'likes' => $user->likedFilms()->orderByPivot('updated_at', 'desc')->withCardStats()->paginate(30),
             'lists' => $user->filmLists()
                 ->with(['user', 'films' => fn ($query) => $query->orderBy('list_items.position')->limit(5)])
                 ->withCount('films')

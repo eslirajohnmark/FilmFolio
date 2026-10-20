@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use App\Models\User;
 use App\Notifications\WelcomeToFilmFolio;
+use App\Services\LiveUpdates;
 use App\Services\Recommendations;
 use App\Services\ResendApiTransport;
 use Illuminate\Auth\Events\Login;
@@ -16,6 +17,7 @@ use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\ServiceProvider;
+use Illuminate\Validation\Rules\Password;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -33,6 +35,13 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         $this->configureRateLimiting();
+
+        // Open pages refresh themselves when films, lists or featured members change.
+        $this->app->make(LiveUpdates::class)->watchModels();
+
+        // Every new password (register, reset, settings): 8+ characters with an
+        // uppercase and a lowercase letter, a number and a special character.
+        Password::defaults(fn () => Password::min(8)->mixedCase()->numbers()->symbols());
 
         Mail::extend('resend-api', fn (array $config) => new ResendApiTransport(
             (string) $config['key'],

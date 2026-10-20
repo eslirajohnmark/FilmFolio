@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Storage;
 
 class User extends Authenticatable
@@ -33,8 +34,16 @@ class User extends Authenticatable
         'banned_at' => 'datetime',
         'is_featured' => 'boolean',
         'email_notifications' => 'boolean',
+        'last_seen_at' => 'datetime',
         'password' => 'hashed',
     ];
+
+    /**
+     * A member counts as online when they loaded a page, or an open page checked in, this recently.
+     * Open pages check in every few seconds (see partials/scripts), so two minutes allows for
+     * browsers slowing timers in background tabs.
+     */
+    public const ONLINE_WITHIN_SECONDS = 120;
 
     protected static function booted(): void
     {
@@ -104,6 +113,40 @@ class User extends Authenticatable
         $this->watchlist()->detach($film->id);
     }
 
+    /**
+     * Rate a film from 0.5 to 5 stars in half-star steps. Rating a film marks it watched.
+     * Returns false, changing nothing, when the rating is out of range or not a half step.
+     */
+    public function rateFilm(Film $film, float $rating): bool
+    {
+        if ($rating < 0.5 || $rating > 5 || fmod($rating * 2, 1.0) !== 0.0) {
+            return false;
+        }
+
+        $review = Review::updateOrCreate(
+            ['user_id' => $this->id, 'film_id' => $film->id],
+            ['rating' => $rating],
+        );
+        $this->markWatched($film);
+
+        if ($review->wasRecentlyCreated || $review->wasChanged('rating')) {
+            Activity::log($this, 'rated', $film, ['rating' => $rating]);
+        }
+
+        return true;
+    }
+
+    /**
+     * This member's rating of every film they have rated, keyed by film id. Loaded once per
+     * request, so a page of poster cards can show the member's own stars without a query each.
+     *
+     * @return Collection<int, float>
+     */
+    public function filmRatings(): Collection
+    {
+        return once(fn () => $this->reviews()->pluck('rating', 'film_id')->map(fn ($rating): float => (float) $rating));
+    }
+
     public function following()
     {
         return $this->belongsToMany(User::class, 'follows', 'follower_id', 'following_id')
@@ -114,6 +157,12 @@ class User extends Authenticatable
     {
         return $this->belongsToMany(User::class, 'follows', 'following_id', 'follower_id')
             ->withTimestamps();
+    }
+
+    public function isOnline(): bool
+    {
+        return $this->last_seen_at !== null
+            && $this->last_seen_at->gte(now()->subSeconds(self::ONLINE_WITHIN_SECONDS));
     }
 
     /**

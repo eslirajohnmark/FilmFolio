@@ -1,5 +1,6 @@
-<x-guest-layout heading="Create Account" subheading="Join the FilmFolio community">
-    <form method="POST" action="{{ route('register') }}" data-submit-once data-clear-on-back autocomplete="off">
+<x-guest-layout heading="Create Account" subheading="Join the FilmFolio community"
+                error-banner="Registration failed. Please fill in all the required fields correctly.">
+    <form method="POST" action="{{ route('register') }}" data-submit-once data-clear-on-back data-require-filled autocomplete="off">
         @csrf
 
         <x-auth-input name="name" label="Full Name" icon="user"
@@ -12,10 +13,10 @@
                       placeholder="Used if you forget your password" required autocomplete="email" />
 
         <x-auth-input name="password" label="Password" type="password" icon="lock"
-                      placeholder="Enter your password" required autocomplete="new-password" />
+                      placeholder="Enter your password" required autocomplete="new-password" :checklist="true" />
 
         <x-auth-input name="password_confirmation" label="Confirm Password" type="password" icon="lock"
-                      placeholder="Confirm your password" required autocomplete="new-password" />
+                      placeholder="Confirm your password" required autocomplete="new-password" matches="password" />
 
         <button type="submit" class="btn-submit" data-loading-text="Creating account…">Register</button>
     </form>

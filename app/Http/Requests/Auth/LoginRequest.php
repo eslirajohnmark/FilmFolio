@@ -13,6 +13,11 @@ use Illuminate\Validation\ValidationException;
 class LoginRequest extends FormRequest
 {
     /**
+     * Shown (in a red banner) when the username/email or password is wrong.
+     */
+    public const FAILED_MESSAGE = 'Invalid Credentials';
+
+    /**
      * Determine if the user is authorized to make this request.
      */
     public function authorize(): bool
@@ -46,7 +51,7 @@ class LoginRequest extends FormRequest
             RateLimiter::hit($this->throttleKey());
 
             throw ValidationException::withMessages([
-                'login' => trans('auth.failed'),
+                'login' => self::FAILED_MESSAGE,
             ]);
         }
 

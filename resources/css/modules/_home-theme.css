@@ -1,0 +1,81 @@
+/* ============================================================
+   Home page in blue / violet / red, beyond the hero (that's in _hero.css):
+   navbar, review and activity lists, empty states, footer and the phone tab bar.
+   .is-home is on <body> only on the home page; .home-page wraps its content.
+   ============================================================ */
+
+/* ---- Navbar ---- */
+.is-home .navbar {
+    border-bottom: 1px solid;
+    border-image: linear-gradient(90deg, rgba(59, 130, 246, 0.35), rgba(139, 92, 246, 0.35), rgba(239, 68, 68, 0.35)) 1;
+}
+.is-home .brand-logo {
+    background: var(--grad-trio);
+    box-shadow: 0 4px 16px rgba(139, 92, 246, 0.35);
+}
+.is-home .nav-links a.active::after { background: var(--grad-trio); }
+.is-home .nav-links a:hover { color: #c7d2fe; }
+.is-home .navbar .btn-register {
+    background: linear-gradient(90deg, var(--trio-blue), var(--trio-violet), var(--trio-red));
+    box-shadow: 0 6px 22px rgba(139, 92, 246, 0.4);
+}
+.is-home .navbar .btn-register:hover { box-shadow: 0 8px 26px rgba(239, 68, 68, 0.35); }
+.is-home .nav-avatar { border-color: rgba(139, 92, 246, 0.6); }
+
+/* ---- Hero lights fade out at the bottom instead of stopping at a hard edge ---- */
+.home-hero .landing-glow {
+    -webkit-mask-image: linear-gradient(180deg, #000 55%, transparent);
+    mask-image: linear-gradient(180deg, #000 55%, transparent);
+}
+
+/* ---- Stars: a blue → violet → red gradient (reviews, activity, rating badges) ---- */
+.home-page .stars {
+    background: linear-gradient(90deg, #60a5fa, #a78bfa 50%, #f87171);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+}
+.home-page .stars .empty { color: #4b4560; }
+
+/* ---- Popular reviews ---- */
+.home-page .review-author { color: #93c5fd; }
+.home-page .review-author:hover { color: #bfdbfe; }
+.home-page .review-title a:hover { color: #c4b5fd; }
+.home-page .review-footer a { color: #c4b5fd; }
+.home-page .review-footer a:hover { color: #fff; }
+.home-page .review-card .poster { transition: border-color var(--t-base), box-shadow var(--t-base); }
+.home-page .review-card:hover .poster { border-color: rgba(139, 92, 246, 0.6); box-shadow: 0 10px 26px rgba(59, 130, 246, 0.2), 0 10px 26px rgba(239, 68, 68, 0.15); }
+/* Agree in blue, disagree in red */
+.home-page .vote-btn:hover { border-color: var(--trio-violet); }
+.home-page .vote-btn.on.agree { border-color: var(--trio-blue); background: rgba(59, 130, 246, 0.14); }
+.home-page .vote-btn.on.disagree { border-color: var(--trio-red); background: rgba(239, 68, 68, 0.14); }
+
+/* ---- Recent activity: members in blue, films in violet ---- */
+.home-page .activity-content a { color: #c4b5fd; }
+.home-page .activity-content a:hover { color: #f9a8d4; }
+.home-page .activity-content a.activity-user,
+.home-page a.activity-user { color: #93c5fd; }
+.home-page a.activity-user:hover { color: #bfdbfe; }
+.home-page .activity-row { border-bottom-color: rgba(139, 92, 246, 0.14); }
+
+/* ---- Links in empty states ("Find members to follow →") ---- */
+.home-page .empty-state a { color: #93c5fd; }
+.home-page .empty-state a:hover { color: #c4b5fd; }
+
+/* ---- Footer ---- */
+.is-home .site-footer {
+    border-top: 1px solid;
+    border-image: linear-gradient(90deg, transparent, rgba(59, 130, 246, 0.5), rgba(139, 92, 246, 0.5), rgba(239, 68, 68, 0.5), transparent) 1;
+}
+.is-home .footer-credit {
+    background: var(--grad-trio);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+}
+
+/* ---- Phone tab bar ---- */
+.is-home .tab-bar-fab { background: var(--grad-trio); box-shadow: 0 8px 24px rgba(139, 92, 246, 0.45); }
+.is-home .tab-bar-item.active:not(.tab-bar-primary)::before { background: var(--grad-trio); }
+.is-home .tab-bar-item.active .tab-bar-icon { stroke: #93c5fd; }
+.is-home .tab-bar-item.active .tab-bar-avatar { border-color: var(--trio-violet); }

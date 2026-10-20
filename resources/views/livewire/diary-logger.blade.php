@@ -7,7 +7,7 @@
     @endguest
 
     @auth
-        <div style="display:flex;gap:14px;align-items:center;margin-bottom:20px;">
+        <div style="display:flex;flex-wrap:wrap;gap:14px;align-items:center;margin-bottom:20px;">
             <livewire:star-rating :rating="$rating" model="diary" :key="'star-'.$film->id.'-'.$formVersion" />
             <button class="btn-register" wire:click="$toggle('showForm')">
                 {{ $showForm ? 'Cancel' : '✎ Log a Watch' }}

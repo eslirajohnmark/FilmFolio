@@ -4,7 +4,10 @@
     @include('partials.head', ['title' => trim($__env->yieldContent('title')) ?: config('app.name', 'FilmFolio')])
     @livewireStyles
 </head>
-<body>
+<body class="has-tab-bar {{ request()->routeIs('home') ? 'is-home' : '' }}">
+    @if(request()->routeIs('home'))
+        @include('partials.intro')
+    @endif
     @include('partials.navbar')
 
     @if(session('status'))
@@ -18,11 +21,15 @@
         <div class="toast">{{ $statusMessages[session('status')] ?? session('status') }}</div>
     @endif
 
+    @include('partials.banner')
+
     <main>
         @yield('content')
     </main>
 
     @include('partials.footer')
+
+    @include('partials.tab-bar')
 
     @livewireScripts
     @include('partials.scripts')

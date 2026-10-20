@@ -3,6 +3,7 @@
 use App\Http\Middleware\EnsureUserIsAdmin;
 use App\Http\Middleware\EnsureUserIsNotSuspended;
 use App\Http\Middleware\PreventBackHistory;
+use App\Http\Middleware\TrackLastSeen;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
@@ -23,6 +24,7 @@ return Application::configure(basePath: dirname(__DIR__))
             'throttle:global',
             AuthenticateSession::class,
             EnsureUserIsNotSuspended::class,
+            TrackLastSeen::class,
             PreventBackHistory::class,
         ]);
     })

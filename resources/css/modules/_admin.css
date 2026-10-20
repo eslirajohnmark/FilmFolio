@@ -48,7 +48,8 @@
     color: var(--accent-red-bright);
 }
 
-.row-actions { display: flex; gap: 8px; }
+.row-actions { display: flex; align-items: center; gap: 8px; }
+.row-actions .view-only { font-size: 11px; font-weight: 600; letter-spacing: 0.02em; white-space: nowrap; }
 /* ---------- Admin shell ---------- */
 .admin-bar { background: linear-gradient(90deg, #1a0b1e 0%, #2a0f2c 50%, #1a0b1e 100%); }
 .admin-main { min-height: calc(100vh - 56px); }
@@ -142,6 +143,9 @@
     z-index: 5;
 }
 .chart-tip b { color: #fff; }
+/* Edge columns: open the tip inwards so it never pokes past the screen */
+.col:nth-child(-n+2) .chart-tip { left: 0; transform: none; }
+.col:nth-last-child(-n+2) .chart-tip { left: auto; right: 0; transform: none; }
 
 .col-chart {
     display: flex;
@@ -220,8 +224,10 @@
     gap: 28px;
     align-items: start;
 }
+.admin-split-wide { grid-template-columns: minmax(0, 1fr) 320px; }
 @media (max-width: 860px) {
-    .admin-split { grid-template-columns: 1fr; }
+    .admin-split,
+    .admin-split-wide { grid-template-columns: minmax(0, 1fr); }
 }
 
 /* ---------- Film media uploads ---------- */
@@ -295,3 +301,54 @@
 
 /* Avatars keep their size inside narrow table cells */
 .admin-table .member-avatar { max-width: none; flex-shrink: 0; }
+
+/* ---- Online indicator (accounts): green dot when online, grey with "… ago" when not ---- */
+.presence {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    margin-top: 4px;
+    font-size: 11.5px;
+    font-weight: 600;
+    color: var(--text-muted);
+    white-space: nowrap;
+}
+.presence-dot {
+    width: 8px;
+    height: 8px;
+    flex-shrink: 0;
+    border-radius: 50%;
+    background: #5d5470;
+}
+.presence.is-online { color: #4ade80; }
+.presence.is-online .presence-dot {
+    background: var(--accent-green);
+    animation: presence-pulse 2s ease-out infinite;
+}
+
+/* The same dot on the corner of a profile picture */
+.presence-avatar { position: relative; display: inline-block; flex-shrink: 0; line-height: 0; }
+.presence-avatar::after {
+    content: "";
+    position: absolute;
+    right: 6%;
+    bottom: 6%;
+    width: 20%;
+    height: 20%;
+    min-width: 11px;
+    min-height: 11px;
+    border-radius: 50%;
+    background: #5d5470;
+    border: 3px solid var(--bg-base);
+}
+.presence-avatar.small::after { right: -2px; bottom: -2px; border-width: 2px; }
+.presence-avatar.is-online::after { background: var(--accent-green); }
+
+@keyframes presence-pulse {
+    0%   { box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.55); }
+    70%  { box-shadow: 0 0 0 6px rgba(34, 197, 94, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(34, 197, 94, 0); }
+}
+@media (prefers-reduced-motion: reduce) {
+    .presence.is-online .presence-dot { animation: none; }
+}

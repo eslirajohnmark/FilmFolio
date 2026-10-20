@@ -4,7 +4,7 @@
     @include('partials.head', ['title' => (trim($__env->yieldContent('title')) ?: 'Admin').' · FilmFolio Admin'])
     @livewireStyles
 </head>
-<body class="admin">
+<body class="admin has-tab-bar">
     <nav class="navbar admin-bar" id="navbar">
         <a href="{{ route('admin.dashboard') }}" class="brand">
             @include('partials.logo')
@@ -16,6 +16,7 @@
 
         <ul class="nav-links">
             <li><a href="{{ route('admin.dashboard') }}" class="{{ request()->routeIs('admin.dashboard') ? 'active' : '' }}">Dashboard</a></li>
+            <li><a href="{{ route('admin.activity.index') }}" class="{{ request()->routeIs('admin.activity.*') ? 'active' : '' }}">Activity</a></li>
             <li><a href="{{ route('admin.films.index') }}" class="{{ request()->routeIs('admin.films.*') ? 'active' : '' }}">Films</a></li>
             <li><a href="{{ route('admin.lists.index') }}" class="{{ request()->routeIs('admin.lists.*') ? 'active' : '' }}">Lists</a></li>
             <li><a href="{{ route('admin.accounts.index') }}" class="{{ request()->routeIs('admin.accounts.*') ? 'active' : '' }}">Accounts</a></li>
@@ -35,9 +36,13 @@
         <div class="toast">{{ session('status') }}</div>
     @endif
 
+    @include('partials.banner')
+
     <main class="container admin-main">
         @yield('content')
     </main>
+
+    @include('partials.tab-bar', ['admin' => true])
 
     @livewireScripts
     @include('partials.scripts')

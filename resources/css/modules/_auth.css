@@ -237,3 +237,42 @@ body.auth-page { background: #0b0810; }
     font-size: 13px;
     margin-bottom: 16px;
 }
+
+/* ---------- Sign-in / sign-up buttons: blue when ready, gray until every field has input ---------- */
+.auth-card .btn-submit,
+.auth-card.admin .btn-submit {
+    background: #2563eb;
+    color: #fff;
+}
+.auth-card .btn-submit:hover:not(:disabled),
+.auth-card.admin .btn-submit:hover:not(:disabled) {
+    background: #1d4ed8;
+    box-shadow: 0 8px 24px rgba(37, 99, 235, 0.4);
+}
+.auth-card .btn-submit:disabled,
+.auth-card.admin .btn-submit:disabled {
+    background: #4b5563;
+    color: #9ca3af;
+    box-shadow: none;
+    cursor: not-allowed;
+    opacity: 1;
+}
+
+/* ---------- Required / invalid fields turn red ---------- */
+.field.has-error .auth-input input,
+.field.missing .auth-input input,
+.panel-form .field.has-error input {
+    border-color: #ef4444;
+    box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.15);
+}
+.field.has-error label,
+.field.missing label { color: #fca5a5; }
+.field-required {
+    display: none;
+    margin-top: 6px;
+    font-size: 12px;
+    color: #f87171;
+}
+.field.missing .field-required { display: block; }
+.field.has-error .field-required { display: none; }
+.auth-card .field-error { color: #f87171; }

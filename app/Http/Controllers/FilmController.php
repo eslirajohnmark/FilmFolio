@@ -15,7 +15,7 @@ class FilmController extends Controller
     public function index(Recommendations $recommendations): View
     {
         return view('films.index', [
-            'popular' => Film::popularThisWeek()->take(5)->get(),
+            'popular' => Film::popularThisWeek()->withCardStats()->take(5)->get(),
             'suggestions' => $recommendations->suggestionsFor(),
         ]);
     }

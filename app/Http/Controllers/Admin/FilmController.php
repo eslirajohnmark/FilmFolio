@@ -20,10 +20,15 @@ class FilmController extends Controller
     {
         $q = trim((string) $request->query('q', ''));
         $filter = $request->query('filter', 'all');
+        // From the dashboard's "Popular genres / decades" bars
+        $genre = trim((string) $request->query('genre', ''));
+        $decade = $request->integer('decade') ?: null;
 
         $films = Film::query()
             ->withCount(['reviews', 'diaryEntries'])
             ->when($q !== '', fn ($query) => $query->where('title', 'like', "%{$q}%"))
+            ->when($genre !== '', fn ($query) => $query->where('genre', $genre))
+            ->when($decade, fn ($query) => $query->whereBetween('year', [$decade, $decade + 9]))
             ->when($filter === 'teasers', fn ($query) => $query->where('is_teaser', true))
             ->when($filter === 'no-trailer', fn ($query) => $query->whereNull('trailer_key')->whereNull('trailer_path')->whereNull('teaser_path'))
             ->latest()
@@ -43,7 +48,7 @@ class FilmController extends Controller
             }
         }
 
-        return view('admin.films.index', compact('films', 'q', 'filter', 'tmdbResults'));
+        return view('admin.films.index', compact('films', 'q', 'filter', 'genre', 'decade', 'tmdbResults'));
     }
 
     public function create(): View

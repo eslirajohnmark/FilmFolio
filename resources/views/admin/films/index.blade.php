@@ -15,6 +15,8 @@
     <form method="GET" action="{{ route('admin.films.index') }}" class="search-bar" style="margin-bottom:12px;">
         <input type="search" name="q" value="{{ $q }}" placeholder="Search catalogue…" aria-label="Search films">
         <input type="hidden" name="filter" value="{{ $filter }}">
+        @if($genre)<input type="hidden" name="genre" value="{{ $genre }}">@endif
+        @if($decade)<input type="hidden" name="decade" value="{{ $decade }}">@endif
         <button class="btn btn-secondary">Search</button>
     </form>
 
@@ -63,8 +65,15 @@
 
 <div class="filter-tabs" style="margin-bottom:14px;">
     @foreach(['all' => 'All films', 'teasers' => 'Teasers', 'no-trailer' => 'No trailer'] as $key => $label)
-        <a href="{{ route('admin.films.index', array_filter(['filter' => $key, 'q' => $q])) }}" class="{{ $filter === $key ? 'active' : '' }}">{{ $label }}</a>
+        <a href="{{ route('admin.films.index', array_filter(['filter' => $key, 'q' => $q, 'genre' => $genre, 'decade' => $decade])) }}" class="{{ $filter === $key ? 'active' : '' }}">{{ $label }}</a>
     @endforeach
+    {{-- Genre / decade picked from the dashboard: click to clear --}}
+    @if($genre)
+        <a href="{{ route('admin.films.index', array_filter(['filter' => $filter, 'q' => $q, 'decade' => $decade])) }}" class="active" title="Clear the genre filter">{{ $genre }} ✕</a>
+    @endif
+    @if($decade)
+        <a href="{{ route('admin.films.index', array_filter(['filter' => $filter, 'q' => $q, 'genre' => $genre])) }}" class="active" title="Clear the decade filter">{{ $decade }}s ✕</a>
+    @endif
 </div>
 
 <div class="table-wrap">

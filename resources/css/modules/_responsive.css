@@ -16,15 +16,21 @@
 @media (max-width: 960px) {
     .navbar { flex-wrap: wrap; gap: 12px; padding: 14px 20px; }
     .nav-toggle { display: inline-block; }
+    /* flex-basis 100% (not flex: 1) so the open menu drops onto its own rows under the logo */
     .nav-links,
-    .nav-right { display: none; width: 100%; }
+    .nav-right { display: none; flex: 0 0 100%; }
     .navbar.open .nav-links {
         display: flex;
         flex-direction: column;
-        align-items: flex-start;
-        gap: 14px;
-        padding: 8px 0;
+        align-items: stretch;
+        gap: 2px;
+        padding: 4px 0;
     }
+    .navbar.open .nav-links a { display: block; padding: 10px 0; }
+    .navbar.open .nav-links a::after { bottom: 4px; right: auto; width: 28px; }
+    .nav-toggle { padding: 6px 12px; font-size: 18px; }
+    /* The avatar sits at the left on phones, so open its menu to the right */
+    .nav-menu-panel { left: 0; right: auto; }
     .navbar.open .nav-right {
         display: flex;
         flex-wrap: wrap;
@@ -78,6 +84,23 @@
 
     .auth-card { padding: 30px 22px; }
     .page-head .btn-primary { padding: 8px 16px; }
+
+    /* Profile tabs: one row you can swipe sideways, instead of wrapping onto three */
+    .tabs {
+        flex-wrap: nowrap;
+        gap: 22px;
+        overflow-x: auto;
+        overflow-y: hidden;
+        scrollbar-width: none;
+        -webkit-overflow-scrolling: touch;
+    }
+    .tabs::-webkit-scrollbar { display: none; }
+    .tabs a { flex-shrink: 0; white-space: nowrap; margin-bottom: 0; }
+
+    /* iPhones zoom the page in when a field under 16px is tapped */
+    input:not([type="checkbox"]):not([type="radio"]):not([type="range"]):not([type="file"]),
+    select,
+    textarea { font-size: 16px; }
 }
 
 @media (max-width: 480px) {

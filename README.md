@@ -76,7 +76,7 @@ Members sign in with their username or email.
 
 ## Docker
 
-Needs [Docker Desktop](https://www.docker.com/products/docker-desktop/). Make sure `.env` exists with `APP_KEY`, `TMDB_API_KEY`, `ADMIN_*` and mail settings (see Setup), then:
+Only needs [Docker Desktop](https://www.docker.com/products/docker-desktop/). Make sure `.env` exists with `APP_KEY`, `TMDB_API_KEY`, `ADMIN_*` and mail settings (see Setup), then:
 
 ```sh
 docker compose up -d --build   # first build takes a few minutes
@@ -87,17 +87,25 @@ Open http://localhost:8080. Four containers start:
 - **app** — the website (PHP 8.3 + Apache), production mode. On start it migrates the database, creates or updates the admin from `ADMIN_*`, and imports films from TMDB if there are none.
 - **queue** — sends the queued emails (welcome, new follower, review comment).
 - **scheduler** — runs the daily film sync.
-- **mysql** — MySQL 8.4, reachable from your machine on port 3308 (so it doesn't clash with Laragon on 3307).
+- **mysql** — MySQL 8.4, with its data in the `dbdata` volume. Reachable from your machine on port 3308 (user `filmfolio`, password `filmfolio-secret`).
 
-Your `.env` is mounted read-only; Docker overrides the database host, `APP_URL`, `APP_ENV=production` and `APP_DEBUG=false`. Change the port or passwords with `DOCKER_APP_PORT`, `DOCKER_DB_PASSWORD` and `DOCKER_DB_ROOT_PASSWORD` in your shell or a `.env`-style file passed with `--env-file`.
-
-Any `.sql` file in `docker/mysql/init/` is loaded the first time the database starts, so a dump of your local database (`mysqldump -u root filmfolio > docker/mysql/init/01-filmfolio.sql`) brings your members and reviews along. These files are git-ignored because they contain password hashes.
+Uploads live in `storage/app/public`, which is mounted into the containers. Your `.env` is mounted read-only; Docker overrides the database connection, `APP_URL`, `APP_ENV=production` and `APP_DEBUG=false`. Change ports or passwords with `DOCKER_APP_PORT`, `DOCKER_DB_PORT`, `DOCKER_DB_PASSWORD` and `DOCKER_DB_ROOT_PASSWORD` in `.env` or your shell.
 
 ```sh
 docker compose logs -f app     # follow the logs
-docker compose down            # stop; the database and uploads are kept
-docker compose down -v         # stop and delete the database and uploads
+docker compose down            # stop; the database is kept
+docker compose down -v         # stop and delete the Docker database
 ```
+
+**On a phone:** connect it to the same Wi-Fi and open `http://<your computer's IP>:8080` (find the IP with `ipconfig` on Windows). The layout adapts to phone screens.
+
+**Sharing your local database instead:** to make Docker use the MySQL server your local site already uses (e.g. Laragon), so there is only one copy of the data, add this to `.env` (`:` instead of `;` on macOS/Linux):
+
+```sh
+COMPOSE_FILE="docker-compose.yml;docker-compose.host-db.yml"
+```
+
+Docker then skips the `mysql` container and connects to your machine through `host.docker.internal`, using the `DB_PORT`, `DB_DATABASE`, `DB_USERNAME` and `DB_PASSWORD` from `.env`.
 
 ## Tests
 

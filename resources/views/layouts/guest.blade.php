@@ -4,6 +4,8 @@
     @include('partials.head', ['title' => $heading.' · FilmFolio'])
 </head>
 <body class="auth-page">
+    @include('partials.banner', ['errorBanner' => $errorBanner])
+
     <main class="auth-wrapper">
         <a href="{{ route('home') }}" class="auth-close" aria-label="Close">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M5 5l14 14M19 5 5 19"/></svg>

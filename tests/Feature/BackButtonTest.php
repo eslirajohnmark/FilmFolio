@@ -54,7 +54,8 @@ class BackButtonTest extends TestCase
     {
         foreach (['/login', '/register', '/forgot-password', '/admin/login'] as $page) {
             $this->get($page)
-                ->assertSee('data-clear-on-back autocomplete="off"', false);
+                ->assertSee('data-clear-on-back', false)
+                ->assertSee('autocomplete="off"', false);
         }
     }
 }

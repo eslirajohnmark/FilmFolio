@@ -193,3 +193,30 @@ a.tag-chip:hover { background: var(--accent-purple); color: #fff; }
     line-height: 1;
     padding: 0;
 }
+
+/* ---------- New-password checklist (register, reset, settings) ---------- */
+.pw-rules {
+    margin: 8px 0 0;
+    padding: 0;
+    list-style: none;
+    display: grid;
+    gap: 3px;
+    font-size: 12px;
+    color: var(--text-muted);
+}
+.pw-rules li { display: flex; align-items: center; gap: 7px; transition: color var(--t-fast); }
+.pw-rules li::before {
+    content: "○";
+    width: 14px;
+    text-align: center;
+    font-weight: 700;
+}
+.pw-rules.is-active li:not(.met) { color: #f87171; }
+.pw-rules.is-active li:not(.met)::before { content: "✗"; }
+.pw-rules li.met { color: #4ade80; }
+.pw-rules li.met::before { content: "✓"; }
+
+.pw-match { margin-top: 6px; font-size: 12px; font-weight: 600; }
+.pw-match:empty { display: none; }
+.pw-match.ok { color: #4ade80; }
+.pw-match.bad { color: #f87171; }

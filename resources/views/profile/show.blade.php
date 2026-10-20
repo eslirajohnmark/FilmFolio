@@ -57,7 +57,7 @@
     @elseif(in_array($tab, ['films', 'watchlist', 'likes'], true))
         <div class="poster-grid" style="margin-top:24px;">
             @forelse($items as $film)
-                @include('partials.poster-card', ['film' => $film, 'rating' => $tab === 'films' ? $film->reviews_avg_rating : null])
+                @include('partials.poster-card', ['film' => $film])
             @empty
                 <p class="empty-state">Nothing here yet.</p>
             @endforelse

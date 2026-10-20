@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Auth\LoginRequest;
 use Illuminate\Auth\Events\Lockout;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -61,7 +62,7 @@ class AdminLoginController extends Controller
             Log::warning("Failed admin sign-in for \"{$login}\" from {$request->ip()}.");
 
             throw ValidationException::withMessages([
-                'login' => trans('auth.failed'),
+                'login' => LoginRequest::FAILED_MESSAGE,
             ]);
         }
 
@@ -73,7 +74,7 @@ class AdminLoginController extends Controller
         Log::info("Admin @{$admin->username} signed in from {$request->ip()}.");
 
         return redirect()->intended(route('admin.dashboard'))
-            ->with('status', 'Welcome back, admin.');
+            ->with('banner', ['type' => 'success', 'message' => 'Login Successful']);
     }
 
     /**
